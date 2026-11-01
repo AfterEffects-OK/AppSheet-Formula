@@ -390,18 +390,27 @@
     ];
 
     const PRESETS_DATA = {
-      customer: {
-        name: '顧客マスタ',
-        columns: ['ID顧客', '顧客名', 'メールアドレス', '電話番号', '会員ランク', '登録日']
-      },
-      sales: {
-        name: '売上履歴',
-        columns: ['ID売上', 'ID顧客', '担当者', '合計金額', '売上日時', '支払ステータス']
-      },
-      product: {
-        name: '商品マスタ',
-        columns: ['ID商品', '商品名', 'カテゴリ', '販売単価', '原価', '在庫数']
-      }
+        customer: {
+            name: '顧客マスタ', 
+            columns: [
+                'ID顧客', '顧客名', 'メールアドレス', '電話番号', '会員ランク', '登録日',
+                '作成日時', '編集日時', '作成者Email', '編集者Email', 'フラグ', 'メモ'
+            ]
+        }, 
+        sales: {
+            name: '売上履歴', 
+            columns: [
+                'ID売上', 'ID顧客', '担当者', '合計金額', '売上日時', '支払ステータス',
+                '作成日時', '編集日時', '作成者Email', '編集者Email', 'フラグ', 'メモ'
+            ]
+        }, 
+        product: {
+            name: '商品マスタ', 
+            columns: [
+                'ID商品', '商品名', 'カテゴリ', '販売単価', '原価', '在庫数',
+                '作成日時', '編集日時', '作成者Email', '編集者Email', 'フラグ', 'メモ'
+            ]
+        }
     };
 
     const COLUMN_TYPES = ['Text', 'Number', 'Price', 'Date', 'DateTime', 'Ref', 'Email', 'Enum', 'Yes/No'];
