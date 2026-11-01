@@ -814,11 +814,19 @@
     };
 
     window.onFilterTableChange = () => {
-      const sel = document.getElementById('filter-col-selector');
-      if (sel) {
-        sel.innerHTML = getFilterTargetTableColumnsOptions();
-      }
-      updateGeneratedExpression();
+        const tIdx = document.getElementById('filter-target-table')?.value;
+        const targetTable = schema[tIdx];
+        const sel = document.getElementById('filter-col-selector');
+        if (!sel) return;
+        
+        if (!targetTable || !targetTable.columns) {
+            sel.innerHTML = '';
+            updateGeneratedExpression();
+            return;
+        }
+        
+        sel.innerHTML = targetTable.columns.map(c => `<option value="[${escapeHtml(c.name)}]">[${escapeHtml(c.name)}] (${c.type})</option>`).join('');
+        updateGeneratedExpression();
     };
 
     window.onAggTableChange = () => {
@@ -987,28 +995,28 @@
           onSelectTableChange();
       }
       else if (category === 'FILTER') {
-        dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-slate-400 mb-1">対象テーブル</label>
-                <select id="filter-target-table" onchange="onFilterTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+          dynamicInputs.innerHTML = `
+              <div class="space-y-3 text-xs">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                          <label class="block text-slate-400 mb-1">対象テーブル</label>
+                          <select id="filter-target-table" onchange="onFilterTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                      </div>
+                      <div>
+                          <label class="block text-slate-400 mb-1">テーブルの列を挿入（クリックでカーソル位置に追加）</label>
+                          <div class="flex gap-1.5">
+                              <select id="filter-col-selector" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                              <button type="button" onclick="insertColumnToFilter(document.getElementById('filter-col-selector').value)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition shrink-0 cursor-pointer">挿入</button>
+                          </div>
+                      </div>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">絞り込み条件式</label>
+                      <input type="text" id="filter-cond-expr" value='[ステータス] = "進行中"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                  </div>
               </div>
-              <div>
-                <label class="block text-slate-400 mb-1">テーブルの列を挿入（クリックでカーソル位置に追加）</label>
-                <div class="flex gap-1.5">
-                  <select id="filter-col-selector" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
-                  <button type="button" onclick="insertColumnToFilter(document.getElementById('filter-col-selector').value)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition shrink-0 cursor-pointer">挿入</button>
-                </div>
-              </div>
-            </div>
-            <div>
-              <label class="block text-slate-400 mb-1">絞り込み条件式</label>
-              <input type="text" id="filter-cond-expr" value='[ステータス] = "進行中"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
-            </div>
-          </div>
-        `;
-        onFilterTableChange();
+          `;
+          onFilterTableChange(); // フォーム生成時に即座に列リストを流し込む
       }
       else if (category === 'LIST') {
         dynamicInputs.innerHTML = `
