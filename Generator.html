@@ -307,8 +307,8 @@
                 </div>
             </div>
           </div>
+        </div>
       </div>
-
     </main>
   </div>
 
@@ -507,7 +507,6 @@
 
     // Event Listeners
     function initEvents() {
-      // Quick One-line Form Submit (Supports tabs/newlines/commas)
       document.getElementById('form-quick-add').addEventListener('submit', (e) => {
         e.preventDefault();
         const tblNameInput = document.getElementById('quick-tbl-name');
@@ -557,7 +556,6 @@
       toggleThisRow.addEventListener('change', updateGeneratedExpression);
       document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
 
-      // Search filter for function select
       document.getElementById('input-func-search').addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase().trim();
         const options = selectCategory.querySelectorAll('option');
@@ -574,7 +572,7 @@
       });
     }
 
-    // Modal Events Setup for Multiple Schemas (1 record = 1 schema)
+    // Modal Events Setup
     function initModalEvents() {
       btnOpenModal.addEventListener('click', () => {
         importModal.classList.remove('opacity-0', 'pointer-events-none');
@@ -588,7 +586,6 @@
       btnCloseModal.addEventListener('click', closeModal);
       btnCancelModal.addEventListener('click', closeModal);
 
-      // Submit Multi-Schema Import from Text (Spreadsheet rows)
       btnSubmitImport.addEventListener('click', () => {
         const text = modalPasteText.value.trim();
         if (!text) {
@@ -603,7 +600,6 @@
           const trimmedLine = line.trim();
           if (!trimmedLine) return;
 
-          // Split columns by tab or comma
           const rawCols = trimmedLine
             .split(/[\t,]+/)
             .map(c => c.trim())
@@ -611,7 +607,6 @@
 
           if (rawCols.length === 0) return;
 
-          // A列 (rawCols[0]) から "ID" を除いた値をテーブル名にする
           let colA = rawCols[0];
           let tblName = colA.replace(/^ID/, '').trim();
           if (!tblName) {
@@ -640,7 +635,6 @@
         showToast(`${importedCount}件のテーブルを一括インポートしました！`);
       });
 
-      // File Drag & Drop
       dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('border-blue-500');
@@ -668,13 +662,11 @@
     function handleFile(file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const content = e.target.result;
-        modalPasteText.value = content;
+        modalPasteText.value = e.target.result;
       };
       reader.readAsText(file);
     }
 
-    // Auto-detect column type based on name
     function autoDetectType(name) {
         if (name.startsWith('ID') || name.includes('コード')) return 'Text';
         if (name.includes('日') && !name.includes('日時') || name.includes('Date')) return 'Date';
@@ -687,7 +679,6 @@
         return 'Text';
     }
 
-    // Render Schema List UI
     function renderSchema() {
       schemaContainer.innerHTML = '';
 
@@ -786,7 +777,6 @@
       showToast(`プリセット「${p.name}」を追加しました`);
     };
 
-    // Helper functions for options
     function getAllColumnsFlatOptions() {
       let html = '';
       schema.forEach(tbl => {
@@ -797,19 +787,6 @@
       return html;
     }
 
-    // 選択された対象テーブルの列オプションを生成する汎用関数
-    function getTargetTableColumnsOptions(tableSelectId) {
-        // テーブル選択プルダウンがある場合はそれを使用、なければスキーマの最初のテーブルまたは全列
-        const tSelect = document.getElementById(tableSelectId);
-        let targetTable = schema[0];
-        if (tSelect && schema[tSelect.value]) {
-            targetTable = schema[tSelect.value];
-        }
-        if (!targetTable || !targetTable.columns) return '';
-        return targetTable.columns.map(c => `<option value="[${escapeHtml(c.name)}]">[${escapeHtml(c.name)}] (${c.type})</option>`).join('');
-    }
-    
-    // 汎用的なカラム挿入関数（どの入力欄IDにも対応）
     window.insertColumnToInput = (inputElId, colBracketName) => {
         const inputEl = document.getElementById(inputElId);
         if (!inputEl) return;
@@ -821,6 +798,7 @@
         inputEl.selectionStart = inputEl.selectionEnd = start + colBracketName.length;
         updateGeneratedExpression();
     };
+
     window.insertColumnToFilter = (colBracketName) => {
       const inputEl = document.getElementById('filter-cond-expr');
       if (!inputEl) return;
@@ -932,15 +910,12 @@
         }
     });
     
-    // アクティブな入力欄へカラムを挿入する汎用関数
     window.insertColumnToActiveInput = (colBracketName) => {
-        // デフォルトでフォーカスがなければ、現在表示されている主要な入力欄をターゲットにする
         const targetId = lastFocusedInputId || document.querySelector('#dynamic-inputs input, #dynamic-inputs textarea')?.id;
         if (!targetId) return;
         insertColumnToInput(targetId, colBracketName);
     };
 
-    // Render Dynamic Input Forms
     function renderDynamicForm() {
       const selectCategoryEl = document.getElementById('select-category');
       if (!selectCategoryEl) return;
@@ -1029,7 +1004,6 @@
                       <select id="select-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
                   </div>
               </div>
-              <!-- 共通の列挿入ツールバーを追加 -->
               <div class="mt-3 pt-3 border-t border-slate-800 flex items-center gap-2">
                   <span class="text-[11px] text-slate-400">列を挿入:</span>
                   <select id="common-col-selector" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 text-xs">${getAllColumnsFlatOptions()}</select>
@@ -1047,7 +1021,7 @@
                           <select id="filter-target-table" onchange="onFilterTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
                       </div>
                       <div>
-                          <label class="block text-slate-400 mb-1">テーブルの列を挿入（クリックでカーソル位置に追加）</label>
+                          <label class="block text-slate-400 mb-1">テーブルの列を挿入</label>
                           <div class="flex gap-1.5">
                               <select id="filter-col-selector" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
                               <button type="button" onclick="insertColumnToFilter(document.getElementById('filter-col-selector').value)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition shrink-0 cursor-pointer">挿入</button>
@@ -1060,7 +1034,7 @@
                   </div>
               </div>
           `;
-          onFilterTableChange(); // フォーム生成時に即座に列リストを流し込む
+          onFilterTableChange();
       }
       else if (category === 'LIST') {
         dynamicInputs.innerHTML = `
@@ -1090,7 +1064,7 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">リスト 1 (例: 式やカラム)</label>
+              <label class="block text-slate-400 mb-1">リスト 1</label>
               <input type="text" id="intersect-list1" value='LIST("A", "B", "C")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div>
@@ -1196,7 +1170,7 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-slate-400 mb-1">値 1 (例: "A")</label>
+                <label class="block text-slate-400 mb-1">値 1</label>
                 <input type="text" id="switch-val-1" value='"A"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
               </div>
               <div>
@@ -1204,7 +1178,7 @@
                 <input type="text" id="switch-res-1" value='"優"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">値 2 (例: "B")</label>
+                <label class="block text-slate-400 mb-1">値 2</label>
                 <input type="text" id="switch-val-2" value='"B"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
               </div>
               <div>
@@ -1224,7 +1198,7 @@
         dynamicInputs.innerHTML = `
           <div class="space-y-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">条件式 (例: [金額] > 10000)</label>
+              <label class="block text-slate-400 mb-1">条件式</label>
               <input type="text" id="if-cond" value="[金額] > 10000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1292,8 +1266,8 @@
             <div>
               <label class="block text-slate-400 mb-1">判定タイプ</label>
               <select id="exist-mode" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
-                <option value="NOT_EXISTS">存在しないことを確認 (Valid_If用 重複防止)</option>
-                <option value="EXISTS">存在することを確認 (Yes/Noフラグ用)</option>
+                <option value="NOT_EXISTS">存在しないことを確認 (Valid_If用)</option>
+                <option value="EXISTS">存在することを確認 (Yes/No用)</option>
               </select>
             </div>
           </div>
@@ -1310,7 +1284,7 @@
             <div>
               <label class="block text-slate-400 mb-1">判定モード</label>
               <select id="isblank-mode" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
-                <option value="ISBLANK">ISBLANK（空・未入力の場合TRUE）</option>
+                <option value="ISBLANK">ISBLANK（空の場合TRUE）</option>
                 <option value="ISNOTBLANK">ISNOTBLANK（入力済の場合TRUE）</option>
               </select>
             </div>
@@ -1326,7 +1300,7 @@
               <select id="in-val-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">検索対象のリスト (例: LIST("A", "B"))</label>
+              <label class="block text-slate-400 mb-1">検索対象のリスト</label>
               <input type="text" id="in-target-list" value='LIST("管理者", "マネージャー")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
           </div>
@@ -1352,7 +1326,7 @@
         dynamicInputs.innerHTML = `
           <div class="space-y-3 text-xs">
             <label class="block text-slate-400">結合する要素 (カンマ区切り)</label>
-            <input type="text" id="concat-args" value='[姓], " ", [名], " (", [会員ランク], ")"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+            <input type="text" id="concat-args" value='[姓], " ", [名]' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
           </div>
         `;
         updateGeneratedExpression();
@@ -1365,7 +1339,7 @@
               <select id="text-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">フォーマット文字列 (省略可)</label>
+              <label class="block text-slate-400 mb-1">フォーマット文字列</label>
               <input type="text" id="text-format" value="yyyy/MM/dd" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
           </div>
@@ -1378,9 +1352,9 @@
             <div>
               <label class="block text-slate-400 mb-1">関数</label>
               <select id="lrm-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
-                <option value="LEFT">LEFT (先頭から指定文字数)</option>
-                <option value="RIGHT">RIGHT (末尾から指定文字数)</option>
-                <option value="MID">MID (指定位置から指定文字数)</option>
+                <option value="LEFT">LEFT</option>
+                <option value="RIGHT">RIGHT</option>
+                <option value="MID">MID</option>
               </select>
             </div>
             <div>
@@ -1388,7 +1362,7 @@
               <select id="lrm-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">文字数 / 開始位置,文字数</label>
+              <label class="block text-slate-400 mb-1">パラメータ</label>
               <input type="text" id="lrm-params" value="3" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
           </div>
@@ -1407,7 +1381,7 @@
               <input type="text" id="sub-old" value="-" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">置換後の文字列</label>
+              <label class="block text-slate-400 mb-1">置換後</label>
               <input type="text" id="sub-new" value="" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
           </div>
@@ -1418,7 +1392,7 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">対象リスト (SELECT/SPLITなど)</label>
+              <label class="block text-slate-400 mb-1">対象リスト</label>
               <input type="text" id="index-list" value='SPLIT([タグ], ",")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div>
@@ -1435,8 +1409,8 @@
             <div>
               <label class="block text-slate-400 mb-1">関数</label>
               <select id="lu-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
-                <option value="LOWER">LOWER (小文字化)</option>
-                <option value="UPPER">UPPER (大文字化)</option>
+                <option value="LOWER">LOWER</option>
+                <option value="UPPER">UPPER</option>
               </select>
             </div>
             <div>
@@ -1452,9 +1426,9 @@
           <div class="space-y-3 text-xs">
             <label class="block text-slate-400">取得する関数</label>
             <select id="todaynow-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
-              <option value="TODAY">TODAY() - 現在の日付 (Date型)</option>
-              <option value="NOW">NOW() - 現在のタイムスタンプ (DateTime型)</option>
-              <option value="TIMENOW">TIMENOW() - 現在の時刻 (Time型)</option>
+              <option value="TODAY">TODAY()</option>
+              <option value="NOW">NOW()</option>
+              <option value="TIMENOW">TIMENOW()</option>
             </select>
           </div>
         `;
@@ -1464,15 +1438,15 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">年 (Year)</label>
+              <label class="block text-slate-400 mb-1">年</label>
               <input type="text" id="date-y" value="2026" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">月 (Month)</label>
+              <label class="block text-slate-400 mb-1">月</label>
               <input type="text" id="date-m" value="11" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">日 (Day)</label>
+              <label class="block text-slate-400 mb-1">日</label>
               <input type="text" id="date-d" value="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
           </div>
@@ -1483,7 +1457,7 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">基準日 (日付式/カラム)</label>
+              <label class="block text-slate-400 mb-1">基準日</label>
               <input type="text" id="workday-start" value="TODAY()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div>
@@ -1498,11 +1472,11 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">基準日 (日付式/カラム)</label>
+              <label class="block text-slate-400 mb-1">基準日</label>
               <input type="text" id="eomonth-start" value="TODAY()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">加減月数 (0=当月末, 1=翌月末)</label>
+              <label class="block text-slate-400 mb-1">加減月数</label>
               <input type="number" id="eomonth-months" value="0" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
           </div>
@@ -1514,9 +1488,9 @@
           <div class="space-y-3 text-xs">
             <label class="block text-slate-400">取得するユーザー情報</label>
             <select id="user-info-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
-              <option value="USEREMAIL">USEREMAIL() - ログインユーザーのメールアドレス</option>
-              <option value="USERNAME">USERNAME() - ログインユーザー表示名</option>
-              <option value="USERROLE">USERROLE() - ユーザー権限 (Admin / User)</option>
+              <option value="USEREMAIL">USEREMAIL()</option>
+              <option value="USERNAME">USERNAME()</option>
+              <option value="USERROLE">USERROLE()</option>
             </select>
           </div>
         `;
@@ -1527,10 +1501,10 @@
           <div class="space-y-3 text-xs">
             <label class="block text-slate-400">取得するコンテキスト情報</label>
             <select id="context-option" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
-              <option value='"View"'>CONTEXT("View") - 現在表示中のビュー名</option>
-              <option value='"ViewType"'>CONTEXT("ViewType") - ビュータイプ (Form, Table, Detailなど)</option>
-              <option value='"AppName"'>CONTEXT("AppName") - アプリ名</option>
-              <option value='"Host"'>CONTEXT("Host") - 実行環境 (Device, Browserなど)</option>
+              <option value='"View"'>CONTEXT("View")</option>
+              <option value='"ViewType"'>CONTEXT("ViewType")</option>
+              <option value='"AppName"'>CONTEXT("AppName")</option>
+              <option value='"Host"'>CONTEXT("Host")</option>
             </select>
           </div>
         `;
@@ -1542,9 +1516,9 @@
             <div>
               <label class="block text-slate-400 mb-1">端数処理関数</label>
               <select id="round-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
-                <option value="ROUND">ROUND (四捨五入)</option>
-                <option value="CEILING">CEILING (切り上げ)</option>
-                <option value="FLOOR">FLOOR (切り捨て)</option>
+                <option value="ROUND">ROUND</option>
+                <option value="CEILING">CEILING</option>
+                <option value="FLOOR">FLOOR</option>
               </select>
             </div>
             <div>
@@ -1568,18 +1542,17 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">最小値 (Min)</label>
+              <label class="block text-slate-400 mb-1">最小値</label>
               <input type="number" id="rand-min" value="1000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">最大値 (Max)</label>
+              <label class="block text-slate-400 mb-1">最大値</label>
               <input type="number" id="rand-max" value="9999" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
             </div>
           </div>
         `;
         updateGeneratedExpression();
       }
-      // renderDynamicForm() 関数内の分岐に追加
       else if (category === 'COMPOSITE_IF_SUM') {
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -1596,13 +1569,14 @@
                       <select id="comp-sum-cond" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">判定のしきい値 (例: 100000)</label>
+                      <label class="block text-slate-400 mb-1">判定のしきい値</label>
                       <input type="number" id="comp-sum-threshold" value="100000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
                   </div>
               </div>
           `;
           onCompSumTableChange();
-      } else if (category === 'COMPOSITE_ISBLANK_FILTER') {
+      } 
+      else if (category === 'COMPOSITE_ISBLANK_FILTER') {
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
@@ -1616,25 +1590,27 @@
               </div>
           `;
           onCompDupTableChange();
-      } else if (category === 'COMPOSITE_INDEX_SPLIT') {
+      } 
+      else if (category === 'COMPOSITE_INDEX_SPLIT') {
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                      <label class="block text-slate-400 mb-1">対象の文字列カラム (EnumListなど)</label>
+                      <label class="block text-slate-400 mb-1">対象の文字列カラム</label>
                       <select id="comp-split-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">取得するインデックス位置 (1始まり)</label>
+                      <label class="block text-slate-400 mb-1">取得するインデックス位置</label>
                       <input type="number" id="comp-split-pos" value="1" min="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
                   </div>
               </div>
           `;
           updateGeneratedExpression();
-      } else if (category === 'COMPOSITE_IN_SELECT') {
+      } 
+      else if (category === 'COMPOSITE_IN_SELECT') {
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                      <label class="block text-slate-400 mb-1">判定する値/ユーザー (例: USEREMAIL())</label>
+                      <label class="block text-slate-400 mb-1">判定する値</label>
                       <input type="text" id="comp-in-val" value="USEREMAIL()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
                   </div>
                   <div>
@@ -1642,7 +1618,7 @@
                       <select id="comp-in-table" onchange="onCompInTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">抽出するメール/値カラム</label>
+                      <label class="block text-slate-400 mb-1">抽出するカラム</label>
                       <select id="comp-in-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
                   </div>
               </div>
@@ -1651,7 +1627,6 @@
       }
     }
 
-    // Additional Helper for RefRows
     window.onRefRowsTableChange = () => {
       const tIdx = document.getElementById('refrows-target-table').value;
       const targetTable = schema[tIdx];
@@ -1919,7 +1894,7 @@
       }
       else if (category === 'DATE_CONSTRUCT') {
         const y = document.getElementById('date-y')?.value || '2026';
-        const m = document.getElementById('date-m')?.value || '1';
+        const m = document.getElementById('date-m')?.value || '11';
         const d = document.getElementById('date-d')?.value || '1';
         expression = `DATE("${y}-${m}-${d}")`;
         explanation = `指定された年・月・日（${y}/${m}/${d}）からDateオブジェクトを生成します。`;
@@ -1977,49 +1952,46 @@
         const sumCol = document.getElementById('comp-sum-col')?.value || '金額';
         const condCol = document.getElementById('comp-sum-cond')?.value || 'ID顧客';
         const threshold = document.getElementById('comp-sum-threshold')?.value || '100000';
-          if (targetTable) {
-              expression = `IF(SUM(SELECT(${targetTable.name}[${sumCol}], [${condCol}] = ${thisRowPrefix}[ID顧客])) >= ${threshold}, "VIP", "一般")`;
-              explanation = `「${targetTable.name}」テーブルから現在行の顧客に紐づく [${sumCol}] の合計を算出し、${threshold}円以上であれば「VIP」、それ以外は「一般」と判定します。`;
-              advice = `親テーブルのVirtual Column（仮想列）に設定することで、顧客ごとのランク分けやステータス自動制御に活用できます。`;
-          }
-        } 
-        else if (category === 'COMPOSITE_ISBLANK_FILTER') {
-          const tIdx = document.getElementById('comp-dup-table')?.value;
-          const targetTable = schema[tIdx];
-          const dupCol = document.getElementById('comp-dup-col')?.value || 'メールアドレス';
-          if (targetTable) {
-              expression = `ISBLANK(FILTER("${targetTable.name}", AND([${dupCol}] = ${thisRowPrefix}[${dupCol}], [ID] <> ${thisRowPrefix}[ID])))`;
-              explanation = `編集中の [${dupCol}] が、自分自身を除く他のレコードにすでに存在するかをチェックし、存在しない（空である）場合にTRUE（入力許可）を返します。`;
-              advice = `Valid_If（入力規則）に設定することで、フォームへの重複データの登録をリアルタイムにブロックできます。`;
-          }
-        } 
-        else if (category === 'COMPOSITE_INDEX_SPLIT') {
-          const splitCol = document.getElementById('comp-split-col')?.value || 'タグ';
-          const pos = document.getElementById('comp-split-pos')?.value || '1';
-          expression = `INDEX(SPLIT([${splitCol}], ","), ${pos})`;
-          explanation = `カンマ区切りの文字列カラム [${splitCol}] をリストに分解し、指定された ${pos} 番目の要素をピンポイントで取得します。`;
-          advice = `EnumListや複数選択されたタグから最初の値だけを取り出して別の処理に渡したい場合に非常に便利です。`;
-        } 
-        else if (category === 'COMPOSITE_IN_SELECT') {
-          const valExpr = document.getElementById('comp-in-val')?.value || 'USEREMAIL()';
-          const tIdx = document.getElementById('comp-in-table')?.value;
-          const targetTable = schema[tIdx];
-          const inCol = document.getElementById('comp-in-col')?.value || 'メールアドレス';
-            if (targetTable) {
-                expression = `IN(${valExpr}, SELECT(${targetTable.name}[${inCol}], TRUE))`;
-                explanation = `${valExpr} の値が、「${targetTable.name}」の [${inCol}] カラムのリスト内に含まれているかを判定します。`;
-                advice = `Security Filter（セキュリティフィルター）や、特定の権限を持つユーザーのみにボタンを表示・非表示にする場合の条件式として最適です。`;
-            }
+        if (targetTable) {
+            expression = `IF(SUM(SELECT(${targetTable.name}[${sumCol}], [${condCol}] = ${thisRowPrefix}[ID顧客])) >= ${threshold}, "VIP", "一般")`;
+            explanation = `「${targetTable.name}」テーブルから現在行の顧客に紐づく [${sumCol}] の合計を算出し、${threshold}円以上であれば「VIP」、それ以外は「一般」と判定します。`;
+            advice = `親テーブルのVirtual Column（仮想列）に設定することで、顧客ごとのランク分けやステータス自動制御に活用できます。`;
         }
-      
+      } 
+      else if (category === 'COMPOSITE_ISBLANK_FILTER') {
+        const tIdx = document.getElementById('comp-dup-table')?.value;
+        const targetTable = schema[tIdx];
+        const dupCol = document.getElementById('comp-dup-col')?.value || 'メールアドレス';
+        if (targetTable) {
+            expression = `ISBLANK(FILTER("${targetTable.name}", AND([${dupCol}] = ${thisRowPrefix}[${dupCol}], [ID] <> ${thisRowPrefix}[ID])))`;
+            explanation = `編集中の [${dupCol}] が、自分自身を除く他のレコードにすでに存在するかをチェックし、存在しない（空である）場合にTRUE（入力許可）を返します。`;
+            advice = `Valid_If（入力規則）に設定することで、フォームへの重複データの登録をリアルタイムにブロックできます。`;
+        }
+      } 
+      else if (category === 'COMPOSITE_INDEX_SPLIT') {
+        const splitCol = document.getElementById('comp-split-col')?.value || 'タグ';
+        const pos = document.getElementById('comp-split-pos')?.value || '1';
+        expression = `INDEX(SPLIT([${splitCol}], ","), ${pos})`;
+        explanation = `カンマ区切りの文字列カラム [${splitCol}] をリストに分解し、指定された ${pos} 番目の要素をピンポイントで取得します。`;
+        advice = `EnumListや複数選択されたタグから最初の値だけを取り出して別の処理に渡したい場合に非常に便利です。`;
+      } 
+      else if (category === 'COMPOSITE_IN_SELECT') {
+        const valExpr = document.getElementById('comp-in-val')?.value || 'USEREMAIL()';
+        const tIdx = document.getElementById('comp-in-table')?.value;
+        const targetTable = schema[tIdx];
+        const inCol = document.getElementById('comp-in-col')?.value || 'メールアドレス';
+        if (targetTable) {
+            expression = `IN(${valExpr}, SELECT(${targetTable.name}[${inCol}], TRUE))`;
+            explanation = `${valExpr} の値が、「${targetTable.name}」の [${inCol}] カラムのリスト内に含まれているかを判定します。`;
+            advice = `Security Filter（セキュリティフィルター）や、特定の権限を持つユーザーのみにボタンを表示・非表示にする場合の条件式として最適です。`;
+        }
+      }
 
       codeOutput.textContent = expression;
       textExplanation.textContent = explanation;
       textAdvice.textContent = advice;
       
-      // ==========================================
-      // ★ ここにヘルプURLを動的に切り替える処理を追加！
-      // ==========================================
+      // 公式ヘルプURLの動的マッピング設定
       const FUNCTION_HELP_URLS = {
           // 1. 個別ヘルプが存在する主要関数
           'LOOKUP': 'https://support.google.com/appsheet/answer/10107410?hl=ja',
@@ -2070,17 +2042,18 @@
 
       const helpLinkEl = document.getElementById('link-official-help');
       if (helpLinkEl) {
-          const category = document.getElementById('select-category')?.value;
-          const targetUrl = FUNCTION_HELP_URLS[category] !== undefined ? FUNCTION_HELP_URLS[category] : FUNCTION_HELP_URLS['DEFAULT'];
+          const categoryVal = document.getElementById('select-category')?.value;
+          const targetUrl = FUNCTION_HELP_URLS[categoryVal] !== undefined ? FUNCTION_HELP_URLS[categoryVal] : FUNCTION_HELP_URLS['DEFAULT'];
           
           if (targetUrl) {
               helpLinkEl.href = targetUrl;
-              helpLinkEl.parentElement.style.display = ''; // ボタンを表示
+              helpLinkEl.parentElement.style.display = ''; 
           } else {
               helpLinkEl.href = '#';
-              helpLinkEl.parentElement.style.display = 'none'; // 固有リンクがない場合は行ごと非表示
+              helpLinkEl.parentElement.style.display = 'none'; 
           }
       }
+    } // ← updateGeneratedExpression の閉じ括弧を正しく配置
 
     function getFuncJPName(func) {
       switch(func) {
@@ -2093,7 +2066,6 @@
       }
     }
 
-    // Copy Expression to Clipboard
     function copyToClipboard() {
       const code = codeOutput.textContent;
       if (!code || code.startsWith('--')) return;
@@ -2113,7 +2085,6 @@
       }
     }
 
-    // Toast Notification helper
     function showToast(msg) {
       const toast = document.getElementById('toast');
       const toastMsg = document.getElementById('toast-message');
@@ -2128,22 +2099,18 @@
       }, 2500);
     }
 
-    // Utility
     function escapeHtml(str) {
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
     
-    // 使い方モーダルを開く
     window.openHelpModal = () => {
         const modal = document.getElementById('help-modal');
         if (modal) {
             modal.classList.remove('hidden');
-            // Lucideアイコンが使われている場合は再描画
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
     };
     
-    // 使い方モーダルを閉じる
     window.closeHelpModal = () => {
         const modal = document.getElementById('help-modal');
         if (modal) {
@@ -2151,14 +2118,13 @@
         }
     };
     
-    // モーダルの外側（背景）をクリックしたときにも閉じるようにするオプション
     document.addEventListener('click', (e) => {
         const modal = document.getElementById('help-modal');
         if (e.target === modal) {
             closeHelpModal();
         }
     });
-    // 使い方モーダルのタブ切り替え関数
+
     window.switchHelpTab = (tabName) => {
         const btnSteps = document.getElementById('tab-btn-steps');
         const btnUi = document.getElementById('tab-btn-ui');
@@ -2180,11 +2146,10 @@
     };
   </script>
   
-  <!-- 使い方モーダルウィンドウ（タブ切り替え対応） -->
+  <!-- 使い方モーダルウィンドウ -->
   <div id="help-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl flex flex-col m-4 text-slate-200">
           
-          <!-- モーダルヘッダー -->
           <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 shrink-0">
               <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
                   <i data-lucide="book-open" class="text-blue-400 w-5 h-5"></i>
@@ -2195,7 +2160,6 @@
               </button>
           </div>
   
-          <!-- タブ切り替えボタンバー -->
           <div class="flex px-6 pt-3 border-b border-slate-800 gap-2 shrink-0 bg-slate-950/40">
               <button type="button" onclick="switchHelpTab('steps')" id="tab-btn-steps" class="px-4 py-2 text-xs font-semibold rounded-t-xl border-t border-x border-blue-500/50 bg-blue-600/20 text-blue-400 transition cursor-pointer flex items-center gap-1.5">
                   <i data-lucide="list-ordered" class="w-4 h-4"></i> 基本の使い方
@@ -2205,7 +2169,6 @@
               </button>
           </div>
           
-          <!-- モーダル本体（スクロール領域） -->
           <div class="p-6 overflow-y-auto space-y-4 text-sm text-slate-300 flex-1">
               
               <!-- タブ1: 基本の使い方 -->
@@ -2267,7 +2230,6 @@
   
           </div>
   
-          <!-- モーダルフッター -->
           <div class="px-6 py-4 border-t border-slate-800 flex justify-end shrink-0 bg-slate-900">
               <button type="button" onclick="closeHelpModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-xl transition cursor-pointer">
                   閉じる
