@@ -5,13 +5,13 @@
 [![AppSheet Expression Builder](https://img.shields.io/badge/AppSheet-Expression%20Builder-blue?style=flat-square&logo=google-sheets)](https://aftereffects-ok.github.io/AppSheet-Formula/Generator.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-## 🚀 概要 (Overview)
+##  概要 (Overview)
 **AppSheet Expression Builder** は、AppSheet アプリ開発における複雑な関数や数式の記述を強力にサポートする Web アプリケーションです。
 定義したスキーマ（テーブル構造）をもとに、よく使われる定番の関数から高度なネスト・合成関数まで、ワンクリックで正確な AppSheet 式を自動生成し、詳細な解説と開発のワンポイントアドバイスを提供します。
 
 ---
 
-## ✨ 主な機能 (Key Features)
+##  主な機能 (Key Features)
 
 ### 1. スキーマ（テーブル構造）マネージャー
 - **ワンタッププリセット追加**: 「顧客マスタ」「売上履歴」「商品マスタ」などの定番テーブルをワンクリックで追加。
@@ -44,7 +44,7 @@
 
 ---
 
-## 🛠 使い方 (How to Use)
+##  使い方 (How to Use)
 
 1. [AppSheet Expression Builder (GitHub Pages)](https://aftereffects-ok.github.io/AppSheet-Formula/Generator.html) にアクセスします。
 2. **「1. スキーマ（テーブル構造）」** からテーブルを追加するか、「サンプル読み込み」または「一括インポート」でテーブル定義を読み込みます。
@@ -53,7 +53,7 @@
 
 ---
 
-## 💻 技術スタック (Tech Stack)
+##  技術スタック (Tech Stack)
 - **HTML5 / JavaScript (Vanilla JS)**
 - **Tailwind CSS** (スタイリング)
 - **Lucide Icons** (アイコン)
