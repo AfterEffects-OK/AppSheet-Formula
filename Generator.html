@@ -104,7 +104,7 @@
         <!-- Quick Presets -->
         <div class="py-3 border-b border-slate-800/80">
           <p class="text-[11px] text-slate-400 mb-2 flex items-center gap-1">
-            <i data-lucide="sparkles" class="w-3 h-3 text-amber-400"></i> ワンタッププリセット追加:
+            ワンタッププリセット追加:
           </p>
           <div class="flex flex-wrap gap-1.5">
             <button type="button" onclick="addPresetTable('customer')" class="px-2.5 py-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700/60 transition flex items-center gap-1 cursor-pointer">
@@ -278,7 +278,7 @@
             <!-- Pro Tip / Advice -->
             <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4">
               <h3 class="text-xs font-semibold text-amber-400 flex items-center gap-1.5 mb-2">
-                <i data-lucide="lightbulb" class="w-4 h-4 text-amber-400"></i> AppSheet開発のワンポイント
+                AppSheet開発のワンポイント
               </h3>
               <p id="text-advice" class="text-xs text-amber-200/80 leading-relaxed">
                 AppSheetでの実装における注意点やパフォーマンス上のヒントが表示されます。
@@ -1499,7 +1499,7 @@
         if (targetTable) {
           expression = `LOOKUP(${thisRowPrefix}[${keyCol}], "${targetTable.name}", "${matchCol}", "${resCol}")`;
           explanation = `「${targetTable.name}」テーブルを検索し、${matchCol} が現在行の [${keyCol}] と一致するレコードの [${resCol}] の値を取り出します。`;
-          advice = `💡 LOOKUP関数は非常に便利ですが、大きなテーブルでは処理が重くなる場合があります。Ref型の列を設定している場合は [Ref列名].[${resCol}]（De-reference構造）を使用する方がより高速です。`;
+          advice = `LOOKUP関数は非常に便利ですが、大きなテーブルでは処理が重くなる場合があります。Ref型の列を設定している場合は [Ref列名].[${resCol}]（De-reference構造）を使用する方がより高速です。`;
         }
       } 
       else if (category === 'DEREF') {
@@ -1507,7 +1507,7 @@
         const targetCol = document.getElementById('deref-target-col')?.value || 'Column';
         expression = `[${refCol}].[${targetCol}]`;
         explanation = `Ref型カラム [${refCol}] が参照している先のリレーションテーブルから、指定した [${targetCol}] の値を直接取得（デリファレンス）します。`;
-        advice = `💡 LOOKUPよりも処理性能が格段に高く、AppSheetでの最も推奨される参照テクニックです。`;
+        advice = `LOOKUPよりも処理性能が格段に高く、AppSheetでの最も推奨される参照テクニックです。`;
       }
       else if (category === 'REF_ROWS') {
         const tIdx = document.getElementById('refrows-target-table')?.value;
@@ -1516,7 +1516,7 @@
         if (targetTable) {
           expression = `REF_ROWS("${targetTable.name}", "${refCol}")`;
           explanation = `「${targetTable.name}」テーブル内で、[${refCol}] が現在行のキーと一致する子レコードのリスト（Related List）を自動取得します。`;
-          advice = `💡 親テーブルに作成される Related ... Virtual Column で自動生成される標準的な式です。`;
+          advice = `親テーブルに作成される Related ... Virtual Column で自動生成される標準的な式です。`;
         }
       }
       else if (category === 'SELECT') {
@@ -1529,7 +1529,7 @@
         if (targetTable) {
           expression = `SELECT(${targetTable.name}[${targetCol}], [${condCol}] = ${thisRowPrefix}[${thisRowCol}])`;
           explanation = `「${targetTable.name}」テーブルから、[${condCol}] が現在行の [${thisRowCol}] と一致する全レコードの [${targetCol}] をリストとして取得します。`;
-          advice = `💡 戻り値は List（配列）型です。Virtual Columnの参照リストやEnumListの選択肢候補（Valid_If / Suggested Values）に有効です。`;
+          advice = `戻り値は List（配列）型です。Virtual Columnの参照リストやEnumListの選択肢候補（Valid_If / Suggested Values）に有効です。`;
         }
       }
       else if (category === 'FILTER') {
@@ -1539,34 +1539,34 @@
         if (targetTable) {
           expression = `FILTER("${targetTable.name}", ${condExpr})`;
           explanation = `「${targetTable.name}」テーブルから条件（${condExpr}）に合致する行の「キー列」のリストを取得します。`;
-          advice = `💡 SELECT(Table[Key], 条件) と同等の動きをしますが、キー列のリストを取得することが明示されるためコードがシンプルになります。`;
+          advice = `SELECT(Table[Key], 条件) と同等の動きをしますが、キー列のリストを取得することが明示されるためコードがシンプルになります。`;
         }
       }
       else if (category === 'LIST') {
         const elems = document.getElementById('list-elements')?.value || '';
         expression = `LIST(${elems})`;
         explanation = `指定した複数の要素（${elems}）をまとめた新しい List（配列）を生成します。`;
-        advice = `💡 EnumListのカラム初期値や、IN()関数の検索対象リストの生成などに役立ちます。`;
+        advice = `EnumListのカラム初期値や、IN()関数の検索対象リストの生成などに役立ちます。`;
       }
       else if (category === 'SPLIT') {
         const targetCol = document.getElementById('split-target-col')?.value || 'TextCol';
         const delim = document.getElementById('split-delimiter')?.value || ',';
         expression = `SPLIT([${targetCol}], "${delim}")`;
         explanation = `[${targetCol}] の文字列を区切り文字 "${delim}" で分割し、要素の List（配列）に変換します。`;
-        advice = `💡 CSV文字列やカンマ区切りテキストを個別要素として分解して処理する際に重宝します。`;
+        advice = `CSV文字列やカンマ区切りテキストを個別要素として分解して処理する際に重宝します。`;
       }
       else if (category === 'INTERSECT') {
         const l1 = document.getElementById('intersect-list1')?.value || 'LIST()';
         const l2 = document.getElementById('intersect-list2')?.value || 'LIST()';
         expression = `INTERSECT(${l1}, ${l2})`;
         explanation = `2つのリスト（${l1}）と（${l2}）の両方に共通して存在する要素のみを抽出した新しいリストを返します。`;
-        advice = `💡 ユーザーの保持する権限リストと、必要権限リストの重複チェックなどに活用されます。`;
+        advice = `ユーザーの保持する権限リストと、必要権限リストの重複チェックなどに活用されます。`;
       }
       else if (category === 'UNIQUE') {
         const listExpr = document.getElementById('unique-target-list')?.value || 'LIST()';
         expression = `UNIQUE(${listExpr})`;
         explanation = `リスト（${listExpr}）の中から重複する要素を除外した一意なリストを生成します。`;
-        advice = `💡 重複のない選択肢リストをフォームに提示したい場合に便利です。`;
+        advice = `重複のない選択肢リストをフォームに提示したい場合に便利です。`;
       }
       else if (category === 'AGGREGATE') {
         const func = document.getElementById('agg-func')?.value || 'SUM';
@@ -1579,14 +1579,14 @@
         if (targetTable) {
           expression = `${func}(SELECT(${targetTable.name}[${targetCol}], [${condCol}] = ${thisRowPrefix}[${thisRowCol}]))`;
           explanation = `「${targetTable.name}」から [${condCol}] が一致する行を抽出し、その [${targetCol}] の${getFuncJPName(func)}を算出します。`;
-          advice = `💡 合計や件数を求める定型パターンです。親テーブル側の Virtual Column に設定することで集計値を自動保持できます。`;
+          advice = `合計や件数を求める定型パターンです。親テーブル側の Virtual Column に設定することで集計値を自動保持できます。`;
         }
       }
       else if (category === 'STDEVP') {
         const listExpr = document.getElementById('stdevp-target-list')?.value || 'LIST()';
         expression = `STDEVP(${listExpr})`;
         explanation = `数値リスト（${listExpr}）の母標準偏差（Standard Deviation）を計算します。`;
-        advice = `💡 データのばらつきや偏差値計算を行いたい高度な集計で利用します。`;
+        advice = `データのばらつきや偏差値計算を行いたい高度な集計で利用します。`;
       }
       else if (category === 'IFS') {
         const col = document.getElementById('ifs-col')?.value || 'Status';
@@ -1598,7 +1598,7 @@
 
         expression = `IFS(\n  [${col}] ${cond1}, ${res1},\n  [${col}] ${cond2}, ${res2},\n  TRUE, ${resDef}\n)`;
         explanation = `[${col}] の値に応じて複数の条件を上から順に評価し、最初に合致した結果を返します。条件がどれにも当てはまらない場合は TRUE（デフォルト値）が返されます。`;
-        advice = `💡 AppSheetでは SWITCH() よりも IFS() の方がより柔軟な条件式（数値比較や範囲指定）を書くことができ推奨されます。`;
+        advice = `AppSheetでは SWITCH() よりも IFS() の方がより柔軟な条件式（数値比較や範囲指定）を書くことができ推奨されます。`;
       }
       else if (category === 'SWITCH') {
         const targetCol = document.getElementById('switch-target-col')?.value || 'Status';
@@ -1610,7 +1610,7 @@
 
         expression = `SWITCH([${targetCol}],\n  ${val1}, ${res1},\n  ${val2}, ${res2},\n  ${def}\n)`;
         explanation = `[${targetCol}] の値が ${val1} なら ${res1}、${val2} なら ${res2}、いずれでもない場合は ${def} を返します。`;
-        advice = `💡 特定の1つのカラムの値と完全一致する条件で分岐させたい場合に可読性が高くなります。`;
+        advice = `特定の1つのカラムの値と完全一致する条件で分岐させたい場合に可読性が高くなります。`;
       }
       else if (category === 'IF') {
         const cond = document.getElementById('if-cond')?.value || 'TRUE';
@@ -1618,7 +1618,7 @@
         const fVal = document.getElementById('if-false-val')?.value || 'FALSE';
         expression = `IF(${cond}, ${tVal}, ${fVal})`;
         explanation = `条件式（${cond}）が真の場合は ${tVal}、偽の場合は ${fVal} を返します。`;
-        advice = `💡 2段階のシンプルな条件分岐に使用します。`;
+        advice = `2段階のシンプルな条件分岐に使用します。`;
       }
       else if (category === 'AND_OR') {
         const type = document.getElementById('andor-type')?.value || 'AND';
@@ -1626,13 +1626,13 @@
         const c2 = document.getElementById('andor-cond2')?.value || 'TRUE';
         expression = `${type}(${c1}, ${c2})`;
         explanation = `${type === 'AND' ? 'すべての条件（' + c1 + ' かつ ' + c2 + '）が満たされているか判定します。' : 'いずれかの条件（' + c1 + ' または ' + c2 + '）が満たされているか判定します。'}`;
-        advice = `💡 引数はカンマ区切りで3つ以上指定することも可能です。`;
+        advice = `引数はカンマ区切りで3つ以上指定することも可能です。`;
       }
       else if (category === 'NOT') {
         const cond = document.getElementById('not-cond')?.value || 'TRUE';
         expression = `NOT(${cond})`;
         explanation = `条件式（${cond}）の真偽結果を反転（TRUE→FALSE / FALSE→TRUE）させます。`;
-        advice = `💡 ISNOTBLANK([Col]) のように専用関数がある場合はそちらを使うとより見やすくなります。`;
+        advice = `ISNOTBLANK([Col]) のように専用関数がある場合はそちらを使うとより見やすくなります。`;
       }
       else if (category === 'EXISTS') {
         const tIdx = document.getElementById('exist-target-table')?.value;
@@ -1645,11 +1645,11 @@
           if (mode === 'NOT_EXISTS') {
             expression = `ISBLANK(FILTER("${targetTable.name}", [${targetCol}] = ${thisRowPrefix}[${thisRowCol}]))`;
             explanation = `「${targetTable.name}」テーブル内に、入力された [${thisRowCol}] と同じ値がまだ存在しない（空である）かチェックします。`;
-            advice = `💡 [Valid_If] プロパティに設定するのに最適です。重複登録を防止し、エラーメッセージを表示させることができます。`;
+            advice = `[Valid_If] プロパティに設定するのに最適です。重複登録を防止し、エラーメッセージを表示させることができます。`;
           } else {
             expression = `COUNT(FILTER("${targetTable.name}", [${targetCol}] = ${thisRowPrefix}[${thisRowCol}])) > 0`;
             explanation = `「${targetTable.name}」テーブル内に、一致するレコードが1件以上存在するか（TRUE/FALSE）を判定します。`;
-            advice = `💡 [Show_If] や [Editable_If] などの表示・編集制御ロジックに利用できます。`;
+            advice = `[Show_If] や [Editable_If] などの表示・編集制御ロジックに利用できます。`;
           }
         }
       }
@@ -1658,34 +1658,34 @@
         const mode = document.getElementById('isblank-mode')?.value || 'ISBLANK';
         expression = `${mode}([${col}])`;
         explanation = `[${col}] が${mode === 'ISBLANK' ? '未入力・空であるか' : '入力済み・値が存在するか'}をチェックします。`;
-        advice = `💡 条件分岐や必須チェックのロジックで最も頻繁に使用される安全な関数です。`;
+        advice = `条件分岐や必須チェックのロジックで最も頻繁に使用される安全な関数です。`;
       }
       else if (category === 'IN') {
         const valCol = document.getElementById('in-val-col')?.value || 'Col';
         const targetList = document.getElementById('in-target-list')?.value || 'LIST()';
         expression = `IN([${valCol}], ${targetList})`;
         explanation = `[${valCol}] の値が指定したリスト（${targetList}）の中に含まれているかどうか（TRUE/FALSE）を判定します。`;
-        advice = `💡 ユーザーの役割判定や、特定カテゴリに属するかのチェックに便利です。`;
+        advice = `ユーザーの役割判定や、特定カテゴリに属するかのチェックに便利です。`;
       }
       else if (category === 'CONTAINS') {
         const col = document.getElementById('contains-target-col')?.value || 'Col';
         const kw = document.getElementById('contains-keyword')?.value || '';
         expression = `CONTAINS([${col}], "${kw}")`;
         explanation = `[${col}] の文字列の中に "${kw}" が含まれているかを部分一致判定します。`;
-        advice = `💡 大文字・小文字は区別されません。あいまい検索などに役立ちます。`;
+        advice = `大文字・小文字は区別されません。あいまい検索などに役立ちます。`;
       }
       else if (category === 'CONCATENATE') {
         const args = document.getElementById('concat-args')?.value || '';
         expression = `CONCATENATE(${args})`;
         explanation = `指定した複数のテキスト要素（${args}）を1つの文字列に結合します。`;
-        advice = `💡 "文字列1" & "文字列2" のように & 演算子を使うことでも同様の結合が可能です。`;
+        advice = `"文字列1" & "文字列2" のように & 演算子を使うことでも同様の結合が可能です。`;
       }
       else if (category === 'TEXT') {
         const col = document.getElementById('text-target-col')?.value || 'Col';
         const fmt = document.getElementById('text-format')?.value || '';
         expression = fmt ? `TEXT([${col}], "${fmt}")` : `TEXT([${col}])`;
         explanation = `[${col}] の値（日付や数値）を指定したフォーマット（${fmt || '標準'}）の文字列に変換します。`;
-        advice = `💡 日付を "yyyy年MM月dd日" の表記に整形して通知文面に差し込む際などに使用します。`;
+        advice = `日付を "yyyy年MM月dd日" の表記に整形して通知文面に差し込む際などに使用します。`;
       }
       else if (category === 'LEFT_RIGHT_MID') {
         const func = document.getElementById('lrm-func')?.value || 'LEFT';
@@ -1693,7 +1693,7 @@
         const params = document.getElementById('lrm-params')?.value || '1';
         expression = `${func}([${col}], ${params})`;
         explanation = `[${col}] の文字列から ${func} のルールに従い部分文字列を抽出します。`;
-        advice = `💡 コード番号の頭文字からカテゴリを判別する場合などに有効です。`;
+        advice = `コード番号の頭文字からカテゴリを判別する場合などに有効です。`;
       }
       else if (category === 'SUBSTITUTE') {
         const col = document.getElementById('sub-col')?.value || 'Col';
@@ -1701,27 +1701,27 @@
         const newStr = document.getElementById('sub-new')?.value || '';
         expression = `SUBSTITUTE([${col}], "${oldStr}", "${newStr}")`;
         explanation = `[${col}] に含まれる "${oldStr}" を "${newStr}" に置換します。`;
-        advice = `💡 ハイフンやスペースの除去整形処理に適しています。`;
+        advice = `ハイフンやスペースの除去整形処理に適しています。`;
       }
       else if (category === 'INDEX') {
         const listExpr = document.getElementById('index-list')?.value || 'LIST()';
         const pos = document.getElementById('index-pos')?.value || '1';
         expression = `INDEX(${listExpr}, ${pos})`;
         explanation = `リスト（${listExpr}）の中の ${pos} 番目の要素を取り出します。`;
-        advice = `💡 AppSheetのリストインデックスは 1 から始まります（0ではありません）。`;
+        advice = `AppSheetのリストインデックスは 1 から始まります（0ではありません）。`;
       }
       else if (category === 'LOWER_UPPER') {
         const func = document.getElementById('lu-func')?.value || 'LOWER';
         const col = document.getElementById('lu-col')?.value || 'Col';
         expression = `${func}([${col}])`;
         explanation = `[${col}] の英字テキストを${func === 'LOWER' ? '小文字' : '大文字'}に統一変換します。`;
-        advice = `💡 メールアドレスやコードの一致判定前の正規化で有効です。`;
+        advice = `メールアドレスやコードの一致判定前の正規化で有効です。`;
       }
       else if (category === 'TODAY_NOW') {
         const func = document.getElementById('todaynow-func')?.value || 'TODAY';
         expression = `${func}()`;
         explanation = `呼び出された時点の現在の${func === 'TODAY' ? '日付' : (func === 'NOW' ? '日時' : '時刻')}を取得します。`;
-        advice = `💡 初期値（Initial Value）に指定することで、登録日時の自動記録が可能です。`;
+        advice = `初期値（Initial Value）に指定することで、登録日時の自動記録が可能です。`;
       }
       else if (category === 'DATE_CONSTRUCT') {
         const y = document.getElementById('date-y')?.value || '2026';
@@ -1729,53 +1729,53 @@
         const d = document.getElementById('date-d')?.value || '1';
         expression = `DATE("${y}-${m}-${d}")`;
         explanation = `指定された年・月・日（${y}/${m}/${d}）からDateオブジェクトを生成します。`;
-        advice = `💡 文字列から日付型へ安全にキャストしたい場合に役立ちます。`;
+        advice = `文字列から日付型へ安全にキャストしたい場合に役立ちます。`;
       }
       else if (category === 'WORKDAY') {
         const start = document.getElementById('workday-start')?.value || 'TODAY()';
         const days = document.getElementById('workday-days')?.value || '5';
         expression = `WORKDAY(${start}, ${days})`;
         explanation = `基準日（${start}）から土日を除いた ${days} 営業日後の日付を返します。`;
-        advice = `💡 納期計算やリマインダー日の自動算出に非常に強力です。`;
+        advice = `納期計算やリマインダー日の自動算出に非常に強力です。`;
       }
       else if (category === 'EOMONTH') {
         const start = document.getElementById('eomonth-start')?.value || 'TODAY()';
         const months = document.getElementById('eomonth-months')?.value || '0';
         expression = `EOMONTH(${start}, ${months})`;
         explanation = `基準日（${start}）の ${months} ヶ月後の月末日を取得します。`;
-        advice = `💡 月末締めの売上集計期間の自動計算などで定番の関数です。`;
+        advice = `月末締めの売上集計期間の自動計算などで定番の関数です。`;
       }
       else if (category === 'USER_INFO') {
         const func = document.getElementById('user-info-func')?.value || 'USEREMAIL';
         expression = `${func}()`;
         explanation = `現在ログインしているユーザーの${func === 'USEREMAIL' ? 'メールアドレス' : (func === 'USERNAME' ? 'ユーザー名' : 'ロール権限')}を返します。`;
-        advice = `💡 担当者ごとのデータセキュリティフィルタ（Security Filter）や初期値設定で必須の関数です。`;
+        advice = `担当者ごとのデータセキュリティフィルタ（Security Filter）や初期値設定で必須の関数です。`;
       }
       else if (category === 'CONTEXT') {
         const opt = document.getElementById('context-option')?.value || '"View"';
         expression = `CONTEXT(${opt})`;
         explanation = `アプリの現在の実行環境情報（${opt}）を取得します。`;
-        advice = `💡 特定の画面（Formビューなど）だけでアクションボタンを表示させたい場合の [Show_If] 条件に重宝します。`;
+        advice = `特定の画面（Formビューなど）だけでアクションボタンを表示させたい場合の [Show_If] 条件に重宝します。`;
       }
       else if (category === 'ROUND') {
         const func = document.getElementById('round-func')?.value || 'ROUND';
         const num = document.getElementById('round-num')?.value || '0';
         expression = `${func}(${num})`;
         explanation = `数値（${num}）に対して ${func}（${func === 'ROUND' ? '四捨五入' : (func === 'CEILING' ? '切り上げ' : '切り捨て')}）を行います。`;
-        advice = `💡 消費税計算や平均値の端数調整で利用します。`;
+        advice = `消費税計算や平均値の端数調整で利用します。`;
       }
       else if (category === 'ABS') {
         const num = document.getElementById('abs-num')?.value || '0';
         expression = `ABS(${num})`;
         explanation = `数値（${num}）の絶対値を求めます。負の数であっても正の数として返されます。`;
-        advice = `💡 予実の差額や変動幅の大きさを判定する際に有効です。`;
+        advice = `予実の差額や変動幅の大きさを判定する際に有効です。`;
       }
       else if (category === 'RANDBETWEEN') {
         const min = document.getElementById('rand-min')?.value || '1';
         const max = document.getElementById('rand-max')?.value || '100';
         expression = `RANDBETWEEN(${min}, ${max})`;
         explanation = `${min} から ${max} の範囲でランダムな整数を生成します。`;
-        advice = `💡 仮IDの生成やテストデータのランダム割り当てなどで活用できます。`;
+        advice = `仮IDの生成やテストデータのランダム割り当てなどで活用できます。`;
       }
 
       codeOutput.textContent = expression;
