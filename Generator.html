@@ -643,13 +643,15 @@
 
     // Auto-detect column type based on name
     function autoDetectType(name) {
-      if (name.startsWith('ID') || name.includes('コード')) return 'Text';
-      if (name.includes('日') || name.includes('Date')) return 'Date';
-      if (name.includes('日時') || name.includes('時間')) return 'DateTime';
-      if (name.includes('金額') || name.includes('単価') || name.includes('価格')) return 'Price';
-      if (name.includes('数') || name.includes('数量') || name.includes('ポイント')) return 'Number';
-      if (name.includes('メール')) return 'Email';
-      return 'Text';
+        if (name.startsWith('ID') || name.includes('コード')) return 'Text';
+        if (name.includes('日') && !name.includes('日時') || name.includes('Date')) return 'Date';
+        if (name.includes('日時') || name.includes('時間') || name.includes('作成日時') || name.includes('編集日時')) return 'DateTime';
+        if (name.includes('金額') || name.includes('単価') || name.includes('価格')) return 'Price';
+        if (name.includes('数') || name.includes('数量') || name.includes('ポイント') || name.includes('在庫数')) return 'Number';
+        if (name.includes('メール') || name.includes('Email')) return 'Email';
+        if (name.includes('フラグ')) return 'Yes/No';
+        if (name.includes('メモ')) return 'LongText';
+        return 'Text';
     }
 
     // Render Schema List UI
