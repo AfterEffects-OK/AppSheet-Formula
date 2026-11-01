@@ -753,14 +753,30 @@
       return html;
     }
 
-    // Helper to get columns of selected target table for FILTER
-    function getFilterTargetTableColumnsOptions() {
-      const tIdx = document.getElementById('filter-target-table')?.value || 0;
-      const targetTable = schema[tIdx];
-      if (!targetTable) return '';
-      return targetTable.columns.map(c => `<option value="[${escapeHtml(c.name)}]">[${escapeHtml(c.name)}] (${c.type})</option>`).join('');
+    // 選択された対象テーブルの列オプションを生成する汎用関数
+    function getTargetTableColumnsOptions(tableSelectId) {
+        // テーブル選択プルダウンがある場合はそれを使用、なければスキーマの最初のテーブルまたは全列
+        const tSelect = document.getElementById(tableSelectId);
+        let targetTable = schema[0];
+        if (tSelect && schema[tSelect.value]) {
+            targetTable = schema[tSelect.value];
+        }
+        if (!targetTable || !targetTable.columns) return '';
+        return targetTable.columns.map(c => `<option value="[${escapeHtml(c.name)}]">[${escapeHtml(c.name)}] (${c.type})</option>`).join('');
     }
-
+    
+    // 汎用的なカラム挿入関数（どの入力欄IDにも対応）
+    window.insertColumnToInput = (inputElId, colBracketName) => {
+        const inputEl = document.getElementById(inputElId);
+        if (!inputEl) return;
+        const start = inputEl.selectionStart;
+        const end = inputEl.selectionEnd;
+        const val = inputEl.value;
+        inputEl.value = val.substring(0, start) + colBracketName + val.substring(end);
+        inputEl.focus();
+        inputEl.selectionStart = inputEl.selectionEnd = start + colBracketName.length;
+        updateGeneratedExpression();
+    };
     window.insertColumnToFilter = (colBracketName) => {
       const inputEl = document.getElementById('filter-cond-expr');
       if (!inputEl) return;
@@ -856,6 +872,22 @@
       updateGeneratedExpression();
     };
 
+    let lastFocusedInputId = '';
+
+    document.addEventListener('focusin', (e) => {
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') && e.target.id) {
+            lastFocusedInputId = e.target.id;
+        }
+    });
+    
+    // アクティブな入力欄へカラムを挿入する汎用関数
+    window.insertColumnToActiveInput = (colBracketName) => {
+        // デフォルトでフォーカスがなければ、現在表示されている主要な入力欄をターゲットにする
+        const targetId = lastFocusedInputId || document.querySelector('#dynamic-inputs input, #dynamic-inputs textarea')?.id;
+        if (!targetId) return;
+        insertColumnToInput(targetId, colBracketName);
+    };
+
     // Render Dynamic Input Forms
     function renderDynamicForm() {
       const selectCategoryEl = document.getElementById('select-category');
@@ -926,27 +958,33 @@
         onRefRowsTableChange();
       }
       else if (category === 'SELECT') {
-        dynamicInputs.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div>
-              <label class="block text-slate-400 mb-1">対象テーブル</label>
-              <select id="select-target-table" onchange="onSelectTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
-            </div>
-            <div>
-              <label class="block text-slate-400 mb-1">抽出したい対象カラム</label>
-              <select id="select-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
-            </div>
-            <div>
-              <label class="block text-slate-400 mb-1">条件カラム</label>
-              <select id="select-cond-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
-            </div>
-            <div>
-              <label class="block text-slate-400 mb-1">比較値 / 現在行のカラム</label>
-              <select id="select-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
-            </div>
-          </div>
-        `;
-        onSelectTableChange();
+          dynamicInputs.innerHTML = `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                      <label class="block text-slate-400 mb-1">対象テーブル</label>
+                      <select id="select-target-table" onchange="onSelectTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">抽出したい対象カラム</label>
+                      <select id="select-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">条件カラム</label>
+                      <select id="select-cond-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">比較値 / 現在行のカラム</label>
+                      <select id="select-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+                  </div>
+              </div>
+              <!-- 共通の列挿入ツールバーを追加 -->
+              <div class="mt-3 pt-3 border-t border-slate-800 flex items-center gap-2">
+                  <span class="text-[11px] text-slate-400">列を挿入:</span>
+                  <select id="common-col-selector" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 text-xs">${getAllColumnsFlatOptions()}</select>
+                  <button type="button" onclick="insertColumnToActiveInput(document.getElementById('common-col-selector').value)" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition shrink-0 cursor-pointer">挿入</button>
+              </div>
+          `;
+          onSelectTableChange();
       }
       else if (category === 'FILTER') {
         dynamicInputs.innerHTML = `
