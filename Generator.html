@@ -2021,66 +2021,50 @@
       // ★ ここにヘルプURLを動的に切り替える処理を追加！
       // ==========================================
       const FUNCTION_HELP_URLS = {
-          // 参照・リレーション
+          // 1. 個別ヘルプが存在する主要関数
           'LOOKUP': 'https://support.google.com/appsheet/answer/10107410?hl=ja',
           'SELECT': 'https://support.google.com/appsheet/answer/10108207?hl=ja',
           'FILTER': 'https://support.google.com/appsheet/answer/10108196?hl=ja',
           'REF_ROWS': 'https://support.google.com/appsheet/answer/10107364?hl=ja',
-          'MAXROW': 'https://support.google.com/appsheet/answer/10107419?hl=ja',
-          'MINROW': 'https://support.google.com/appsheet/answer/10107419?hl=ja',
-      
-          // 条件・分岐
           'IFS': 'https://support.google.com/appsheet/answer/10107912?hl=ja',
           'IF': 'https://support.google.com/appsheet/answer/10107912?hl=ja',
           'SWITCH': 'https://support.google.com/appsheet/answer/10107912?hl=ja',
-          'AND': 'https://support.google.com/appsheet/answer/10107912?hl=ja',
-          'OR': 'https://support.google.com/appsheet/answer/10107912?hl=ja',
-          'NOT': 'https://support.google.com/appsheet/answer/10107912?hl=ja',
+          'TODAY_NOW': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
+          'USER_INFO': 'https://support.google.com/appsheet/answer/10107319?hl=ja',
       
-          // リスト処理
-          'LIST': 'https://support.google.com/appsheet/answer/10107871?hl=ja',
-          'SPLIT': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-          'INDEX': 'https://support.google.com/appsheet/answer/10107857?hl=ja',
-          'COUNT': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-          'ANY': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-          'UNIQUE': 'https://support.google.com/appsheet/answer/10107871?hl=ja',
-          'IN': 'https://support.google.com/appsheet/answer/10107857?hl=ja',
+          // 2. 個別URLがない、または一覧ページへ共通化する関数（空欄またはデフォルト一覧へ誘導）
+          'DEREF': 'https://support.google.com/appsheet/table/10104782?hl=ja',
+          'LIST': 'https://support.google.com/appsheet/table/10104782?hl=ja',
+          'SPLIT': '',
+          'INTERSECT': '',
+          'UNIQUE': '',
+          'AGGREGATE': 'https://support.google.com/appsheet/table/10104782?hl=ja',
+          'STDEVP': '',
+          'AND_OR': '',
+          'NOT': '',
+          'EXISTS': '',
+          'ISBLANK': '',
+          'IN': '',
+          'CONTAINS': '',
+          'CONCATENATE': '',
+          'TEXT': '',
+          'LEFT_RIGHT_MID': '',
+          'SUBSTITUTE': '',
+          'INDEX': '',
+          'LOWER_UPPER': '',
+          'DATE_CONSTRUCT': '',
+          'WORKDAY': '',
+          'EOMONTH': '',
+          'CONTEXT': '',
+          'ROUND': '',
+          'ABS': '',
+          'RANDBETWEEN': '',
+          'COMPOSITE_IF_SUM': '',
+          'COMPOSITE_ISBLANK_FILTER': '',
+          'COMPOSITE_INDEX_SPLIT': '',
+          'COMPOSITE_IN_SELECT': '',
       
-          // 文字列操作
-          'CONCATENATE': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-          'SUBSTITUTE': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-          'LEFT': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-          'RIGHT': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-          'MID': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-          'LEN': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-          'LOWER': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-          'UPPER': 'https://support.google.com/appsheet/answer/10108229?hl=ja',
-      
-          // 日付・時刻
-          'TODAY': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
-          'NOW': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
-          'DATE': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
-          'TIME': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
-          'DATETIME': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
-          'WORKDAY': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
-          'EOMONTH': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
-      
-          // ユーザー・環境情報
-          'USEREMAIL': 'https://support.google.com/appsheet/answer/10107319?hl=ja',
-          'USERNAME': 'https://support.google.com/appsheet/answer/10107319?hl=ja',
-          'USERROLE': 'https://support.google.com/appsheet/answer/10107319?hl=ja',
-          'CONTEXT': 'https://support.google.com/appsheet/answer/10107319?hl=ja',
-      
-          // 数学・集計
-          'SUM': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-          'AVERAGE': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-          'MAX': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-          'MIN': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-          'ROUND': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-          'ABS': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-          'RANDBETWEEN': 'https://support.google.com/appsheet/answer/10107693?hl=ja',
-      
-          // デフォルト（全関数一覧ページ）
+          // 3. デフォルト（上記以外ですべての関数を網羅している公式一覧ページ）
           'DEFAULT': 'https://support.google.com/appsheet/table/10104782?hl=ja'
       };
 
