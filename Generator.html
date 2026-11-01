@@ -1469,6 +1469,20 @@
       updateGeneratedExpression();
     };
 
+    window.addPresetTable = (key) => {
+      const p = PRESETS_DATA[key];
+      if (!p) return;
+
+      schema.push({
+        id: 'tbl_' + Date.now(),
+        name: p.name,
+        columns: p.columns.map(c => ({ name: c, type: autoDetectType(c) }))
+      });
+      saveSchema();
+      renderSchema();
+      showToast(`プリセット「${p.name}」を追加しました`);
+    };
+
     // Core Expression Generator Engine
     function updateGeneratedExpression() {
       if (schema.length === 0) {
