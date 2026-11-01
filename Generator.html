@@ -1880,7 +1880,48 @@
         expression = `RANDBETWEEN(${min}, ${max})`;
         explanation = `${min} から ${max} の範囲でランダムな整数を生成します。`;
         advice = `仮IDの生成やテストデータのランダム割り当てなどで活用できます。`;
-      }
+      } 
+      else if (category === 'COMPOSITE_IF_SUM') {
+        const tIdx = document.getElementById('comp-sum-table')?.value;
+        const targetTable = schema[tIdx];
+        const sumCol = document.getElementById('comp-sum-col')?.value || '金額';
+        const condCol = document.getElementById('comp-sum-cond')?.value || 'ID顧客';
+        const threshold = document.getElementById('comp-sum-threshold')?.value || '100000';
+          if (targetTable) {
+              expression = `IF(SUM(SELECT(${targetTable.name}[${sumCol}], [${condCol}] = ${thisRowPrefix}[ID顧客])) >= ${threshold}, "VIP", "一般")`;
+              explanation = `「${targetTable.name}」テーブルから現在行の顧客に紐づく [${sumCol}] の合計を算出し、${threshold}円以上であれば「VIP」、それ以外は「一般」と判定します。`;
+              advice = `親テーブルのVirtual Column（仮想列）に設定することで、顧客ごとのランク分けやステータス自動制御に活用できます。`;
+          }
+        } 
+        else if (category === 'COMPOSITE_ISBLANK_FILTER') {
+          const tIdx = document.getElementById('comp-dup-table')?.value;
+          const targetTable = schema[tIdx];
+          const dupCol = document.getElementById('comp-dup-col')?.value || 'メールアドレス';
+          if (targetTable) {
+              expression = `ISBLANK(FILTER("${targetTable.name}", AND([${dupCol}] = ${thisRowPrefix}[${dupCol}], [ID] <> ${thisRowPrefix}[ID])))`;
+              explanation = `編集中の [${dupCol}] が、自分自身を除く他のレコードにすでに存在するかをチェックし、存在しない（空である）場合にTRUE（入力許可）を返します。`;
+              advice = `Valid_If（入力規則）に設定することで、フォームへの重複データの登録をリアルタイムにブロックできます。`;
+          }
+        } 
+        else if (category === 'COMPOSITE_INDEX_SPLIT') {
+          const splitCol = document.getElementById('comp-split-col')?.value || 'タグ';
+          const pos = document.getElementById('comp-split-pos')?.value || '1';
+          expression = `INDEX(SPLIT([${splitCol}], ","), ${pos})`;
+          explanation = `カンマ区切りの文字列カラム [${splitCol}] をリストに分解し、指定された ${pos} 番目の要素をピンポイントで取得します。`;
+          advice = `EnumListや複数選択されたタグから最初の値だけを取り出して別の処理に渡したい場合に非常に便利です。`;
+        } 
+        else if (category === 'COMPOSITE_IN_SELECT') {
+          const valExpr = document.getElementById('comp-in-val')?.value || 'USEREMAIL()';
+          const tIdx = document.getElementById('comp-in-table')?.value;
+          const targetTable = schema[tIdx];
+          const inCol = document.getElementById('comp-in-col')?.value || 'メールアドレス';
+            if (targetTable) {
+                expression = `IN(${valExpr}, SELECT(${targetTable.name}[${inCol}], TRUE))`;
+                explanation = `${valExpr} の値が、「${targetTable.name}」の [${inCol}] カラムのリスト内に含まれているかを判定します。`;
+                advice = `Security Filter（セキュリティフィルター）や、特定の権限を持つユーザーのみにボタンを表示・非表示にする場合の条件式として最適です。`;
+            }
+        }
+      
 
       codeOutput.textContent = expression;
       textExplanation.textContent = explanation;
