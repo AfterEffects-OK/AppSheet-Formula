@@ -234,6 +234,12 @@
                 <option value="ABS">ABS（絶対値の計算）</option>
                 <option value="RANDBETWEEN">RANDBETWEEN（指定範囲のランダム整数の生成）</option>
               </optgroup>
+              <optgroup label="高度な合成関数 (Advanced Composition)">
+                  <option value="COMPOSITE_IF_SUM">条件付き集計のしきい値判定 (IF + SUM + SELECT)</option>
+                  <option value="COMPOSITE_ISBLANK_FILTER">重複登録防止バリデーション (ISBLANK + FILTER)</option>
+                  <option value="COMPOSITE_INDEX_SPLIT">リスト要素の抽出 (INDEX + SPLIT)</option>
+                  <option value="COMPOSITE_IN_SELECT">権限・存在判定 (IN + SELECT)</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -819,6 +825,34 @@
       const colsHTML = targetTable.columns.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${c.type})</option>`).join('');
       document.getElementById('exist-target-col').innerHTML = colsHTML;
 
+      updateGeneratedExpression();
+    };
+
+    window.onCompSumTableChange = () => {
+      const tIdx = document.getElementById('comp-sum-table')?.value;
+      const targetTable = schema[tIdx];
+      if (!targetTable) return;
+      const colsHTML = targetTable.columns.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${c.type})</option>`).join('');
+      document.getElementById('comp-sum-col').innerHTML = colsHTML;
+      document.getElementById('comp-sum-cond').innerHTML = colsHTML;
+      updateGeneratedExpression();
+    };
+    
+    window.onCompDupTableChange = () => {
+      const tIdx = document.getElementById('comp-dup-table')?.value;
+      const targetTable = schema[tIdx];
+      if (!targetTable) return;
+      const colsHTML = targetTable.columns.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${c.type})</option>`).join('');
+      document.getElementById('comp-dup-col').innerHTML = colsHTML;
+      updateGeneratedExpression();
+    };
+    
+    window.onCompInTableChange = () => {
+      const tIdx = document.getElementById('comp-in-table')?.value;
+      const targetTable = schema[tIdx];
+      if (!targetTable) return;
+      const colsHTML = targetTable.columns.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} (${c.type})</option>`).join('');
+      document.getElementById('comp-in-col').innerHTML = colsHTML;
       updateGeneratedExpression();
     };
 
@@ -1454,6 +1488,76 @@
           </div>
         `;
         updateGeneratedExpression();
+      }
+      // renderDynamicForm() 関数内の分岐に追加
+      else if (category === 'COMPOSITE_IF_SUM') {
+          dynamicInputs.innerHTML = `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                      <label class="block text-slate-400 mb-1">集計対象テーブル (子/関連)</label>
+                      <select id="comp-sum-table" onchange="onCompSumTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">合計する金額/数値カラム</label>
+                      <select id="comp-sum-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">条件一致カラム (外部キー)</label>
+                      <select id="comp-sum-cond" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">判定のしきい値 (例: 100000)</label>
+                      <input type="number" id="comp-sum-threshold" value="100000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                  </div>
+              </div>
+          `;
+          onCompSumTableChange();
+      } else if (category === 'COMPOSITE_ISBLANK_FILTER') {
+          dynamicInputs.innerHTML = `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                      <label class="block text-slate-400 mb-1">チェック対象テーブル</label>
+                      <select id="comp-dup-table" onchange="onCompDupTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">重複チェックするカラム</label>
+                      <select id="comp-dup-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                  </div>
+              </div>
+          `;
+          onCompDupTableChange();
+      } else if (category === 'COMPOSITE_INDEX_SPLIT') {
+          dynamicInputs.innerHTML = `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                      <label class="block text-slate-400 mb-1">対象の文字列カラム (EnumListなど)</label>
+                      <select id="comp-split-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">取得するインデックス位置 (1始まり)</label>
+                      <input type="number" id="comp-split-pos" value="1" min="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                  </div>
+              </div>
+          `;
+          updateGeneratedExpression();
+      } else if (category === 'COMPOSITE_IN_SELECT') {
+          dynamicInputs.innerHTML = `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                      <label class="block text-slate-400 mb-1">判定する値/ユーザー (例: USEREMAIL())</label>
+                      <input type="text" id="comp-in-val" value="USEREMAIL()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">対象リストテーブル</label>
+                      <select id="comp-in-table" onchange="onCompInTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                  </div>
+                  <div>
+                      <label class="block text-slate-400 mb-1">抽出するメール/値カラム</label>
+                      <select id="comp-in-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                  </div>
+              </div>
+          `;
+          onCompInTableChange();
       }
     }
 
