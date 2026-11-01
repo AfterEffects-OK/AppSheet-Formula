@@ -2083,12 +2083,34 @@
             closeHelpModal();
         }
     });
+    // 使い方モーダルのタブ切り替え関数
+    window.switchHelpTab = (tabName) => {
+        const btnSteps = document.getElementById('tab-btn-steps');
+        const btnUi = document.getElementById('tab-btn-ui');
+        const contentSteps = document.getElementById('help-content-steps');
+        const contentUi = document.getElementById('help-content-ui');
+    
+        if (tabName === 'steps') {
+            btnSteps.className = 'px-4 py-2 text-xs font-semibold rounded-t-xl border-t border-x border-blue-500/50 bg-blue-600/20 text-blue-400 transition cursor-pointer flex items-center gap-1.5';
+            btnUi.className = 'px-4 py-2 text-xs font-medium rounded-t-xl border-t border-x border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer flex items-center gap-1.5';
+            contentSteps.classList.remove('hidden');
+            contentUi.classList.add('hidden');
+        } else {
+            btnUi.className = 'px-4 py-2 text-xs font-semibold rounded-t-xl border-t border-x border-blue-500/50 bg-blue-600/20 text-blue-400 transition cursor-pointer flex items-center gap-1.5';
+            btnSteps.className = 'px-4 py-2 text-xs font-medium rounded-t-xl border-t border-x border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer flex items-center gap-1.5';
+            contentUi.classList.remove('hidden');
+            contentSteps.classList.add('hidden');
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    };
   </script>
   
-  <!-- 使い方モーダルウィンドウ -->
+  <!-- 使い方モーダルウィンドウ（タブ切り替え対応） -->
   <div id="help-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl p-6 m-4 text-slate-200">
-          <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl flex flex-col m-4 text-slate-200">
+          
+          <!-- モーダルヘッダー -->
+          <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 shrink-0">
               <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
                   <i data-lucide="book-open" class="text-blue-400 w-5 h-5"></i>
                   AppSheet Expression Builder の使い方
@@ -2097,41 +2119,81 @@
                   <i data-lucide="x" class="w-5 h-5"></i>
               </button>
           </div>
+  
+          <!-- タブ切り替えボタンバー -->
+          <div class="flex px-6 pt-3 border-b border-slate-800 gap-2 shrink-0 bg-slate-950/40">
+              <button type="button" onclick="switchHelpTab('steps')" id="tab-btn-steps" class="px-4 py-2 text-xs font-semibold rounded-t-xl border-t border-x border-blue-500/50 bg-blue-600/20 text-blue-400 transition cursor-pointer flex items-center gap-1.5">
+                  <i data-lucide="list-ordered" class="w-4 h-4"></i> 基本の使い方
+              </button>
+              <button type="button" onclick="switchHelpTab('ui')" id="tab-btn-ui" class="px-4 py-2 text-xs font-medium rounded-t-xl border-t border-x border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer flex items-center gap-1.5">
+                  <i data-lucide="layout" class="w-4 h-4"></i> UI/UX・便利機能
+              </button>
+          </div>
           
-          <div class="space-y-4 text-sm text-slate-300">
-              <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
-                  <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">1</div>
-                  <div>
-                      <h4 class="font-semibold text-slate-200 mb-1">スキーマ（テーブル構造）の準備</h4>
-                      <p class="text-xs text-slate-400 leading-relaxed">「顧客マスタ」「売上履歴」「商品マスタ」などのワンタッププリセットを追加するか、CSV・スプレッドシートの行データを貼り付けてアプリのテーブル構造を定義します。</p>
+          <!-- モーダル本体（スクロール領域） -->
+          <div class="p-6 overflow-y-auto space-y-4 text-sm text-slate-300 flex-1">
+              
+              <!-- タブ1: 基本の使い方 -->
+              <div id="help-content-steps" class="space-y-4">
+                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
+                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">1</div>
+                      <div>
+                          <h4 class="font-semibold text-slate-200 mb-1">スキーマ（テーブル構造）の準備</h4>
+                          <p class="text-xs text-slate-400 leading-relaxed">「顧客マスタ」「売上履歴」「商品マスタ」などのワンタッププリセットを追加するか、CSV・スプレッドシートの行データを貼り付けてアプリのテーブル構造を定義します。</p>
+                      </div>
+                  </div>
+  
+                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
+                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">2</div>
+                      <div>
+                          <h4 class="font-semibold text-slate-200 mb-1">生成したい処理（関数）の選択</h4>
+                          <p class="text-xs text-slate-400 leading-relaxed">検索機能やカテゴリから目的の関数（SELECT、LOOKUP、IFS、高度な合成関数など）を選択し、対象となるテーブルやカラムを指定します。</p>
+                      </div>
+                  </div>
+  
+                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
+                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">3</div>
+                      <div>
+                          <h4 class="font-semibold text-slate-200 mb-1">式をコピーして AppSheet へ適用</h4>
+                          <p class="text-xs text-slate-400 leading-relaxed">リアルタイムに自動生成された AppSheet 式を確認し、「クリップボードにコピー」ボタンを押して AppSheet エディタに貼り付けて活用します。</p>
+                      </div>
                   </div>
               </div>
   
-              <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
-                  <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">2</div>
-                  <div>
-                      <h4 class="font-semibold text-slate-200 mb-1">生成したい処理（関数）の選択</h4>
-                      <p class="text-xs text-slate-400 leading-relaxed">検索機能やカテゴリから目的の関数（SELECT、LOOKUP、IFS、高度な合成関数など）を選択し、対象となるテーブルやカラムを指定します。</p>
+              <!-- タブ2: UI/UX・便利機能 -->
+              <div id="help-content-ui" class="space-y-4 hidden">
+                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
+                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">
+                          <i data-lucide="layout-template" class="w-4 h-4"></i>
+                      </div>
+                      <div>
+                          <h4 class="font-semibold text-slate-200 mb-1">3ペイン構成のレイアウト</h4>
+                          <p class="text-xs text-slate-400 leading-relaxed">画面は「1. スキーマ」「2. 生成設定」「3. 結果出力」の3ペイン構成です。左側でテーブルを定義すると、右側の関数設定や列挿入プルダウンへリアルタイムに連動します。</p>
+                      </div>
+                  </div>
+  
+                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
+                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">
+                          <i data-lucide="search" class="w-4 h-4"></i>
+                      </div>
+                      <div>
+                          <h4 class="font-semibold text-slate-200 mb-1">関数検索・フィルタ機能</h4>
+                          <p class="text-xs text-slate-400 leading-relaxed">「関数の検索・フィルタ」入力欄にキーワード（例: CONCATENATE, DATEなど）を入力すると、対応する生成パターンを瞬時に絞り込むことができます。</p>
+                      </div>
+                  </div>
+  
+                  <div class="bg-blue-950/30 border border-blue-900/40 rounded-xl p-3.5 text-xs text-blue-200/90 space-y-1">
+                      <p class="font-semibold flex items-center gap-1.5 text-blue-300">
+                          <i data-lucide="sparkles" class="w-4 h-4"></i> カラムのワンクリック挿入
+                      </p>
+                      <p>どの入力欄を選択している時でも、専用のプルダウンからテーブルのカラム名（[列名]）をワンクリックでカーソル位置へスムーズに挿入できます。</p>
                   </div>
               </div>
   
-              <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
-                  <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">3</div>
-                  <div>
-                      <h4 class="font-semibold text-slate-200 mb-1">式をコピーして AppSheet へ適用</h4>
-                      <p class="text-xs text-slate-400 leading-relaxed">リアルタイムに自動生成された AppSheet 式を確認し、「クリップボードにコピー」ボタンを押して AppSheet エディタに貼り付けて活用します。</p>
-                  </div>
-              </div>
-  
-              <div class="bg-blue-950/30 border border-blue-900/40 rounded-xl p-3.5 text-xs text-blue-200/90 space-y-1">
-                  <p class="font-semibold flex items-center gap-1.5 text-blue-300">
-                      <i data-lucide="info" class="w-4 h-4"></i> 便利機能
-                  </p>
-                  <p>どの入力欄を選択している時でも、専用のプルダウンからテーブルのカラム名（[列名]）をワンクリックでカーソル位置へスムーズに挿入できます。</p>
-              </div>
           </div>
   
-          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+          <!-- モーダルフッター -->
+          <div class="px-6 py-4 border-t border-slate-800 flex justify-end shrink-0 bg-slate-900">
               <button type="button" onclick="closeHelpModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-xl transition cursor-pointer">
                   閉じる
               </button>
