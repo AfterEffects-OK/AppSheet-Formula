@@ -356,37 +356,55 @@
   <script>
     // Initial Sample Data Schema (All ID columns updated to "ID[Name]")
     const SAMPLE_SCHEMA = [
-      {
-        id: 'tbl_orders',
-        name: '注文履歴',
-        columns: [
-          { name: 'ID注文', type: 'Text' },
-          { name: 'ID顧客', type: 'Ref' },
-          { name: '金額', type: 'Price' },
-          { name: '注文日', type: 'Date' },
-          { name: 'ステータス', type: 'Text' }
-        ]
-      },
-      {
-        id: 'tbl_customers',
-        name: '顧客マスタ',
-        columns: [
-          { name: 'ID顧客', type: 'Text' },
-          { name: '顧客名', type: 'Text' },
-          { name: 'メールアドレス', type: 'Email' },
-          { name: '会員ランク', type: 'Text' }
-        ]
-      },
-      {
-        id: 'tbl_products',
-        name: '商品マスタ',
-        columns: [
-          { name: 'ID商品', type: 'Text' },
-          { name: '商品名', type: 'Text' },
-          { name: '単価', type: 'Price' },
-          { name: '在庫数', type: 'Number' }
-        ]
-      }
+        {
+            id: 'tbl_orders', 
+            name: '注文履歴', 
+            columns: [
+                { name: 'ID注文', type: 'Text' }, 
+                { name: 'ID顧客', type: 'Ref' }, 
+                { name: '金額', type: 'Price' }, 
+                { name: '注文日', type: 'Date' }, 
+                { name: 'ステータス', type: 'Text' },
+                { name: '作成日時', type: 'DateTime' }, 
+                { name: '編集日時', type: 'DateTime' }, 
+                { name: '作成者Email', type: 'Email' }, 
+                { name: '編集者Email', type: 'Email' }, 
+                { name: 'フラグ', type: 'Yes/No' }, 
+                { name: 'メモ', type: 'LongText' }
+            ] 
+        }, 
+        {
+            id: 'tbl_customers', 
+            name: '顧客マスタ', 
+            columns: [
+                { name: 'ID顧客', type: 'Text' }, 
+                { name: '顧客名', type: 'Text' }, 
+                { name: 'メールアドレス', type: 'Email' }, 
+                { name: '会員ランク', type: 'Text' },
+                { name: '作成日時', type: 'DateTime' }, 
+                { name: '編集日時', type: 'DateTime' }, 
+                { name: '作成者Email', type: 'Email' }, 
+                { name: '編集者Email', type: 'Email' }, 
+                { name: 'フラグ', type: 'Yes/No' }, 
+                { name: 'メモ', type: 'LongText' }
+            ] 
+        }, 
+        {
+            id: 'tbl_products', 
+            name: '商品マスタ', 
+            columns: [
+                { name: 'ID商品', type: 'Text' }, 
+                { name: '商品名', type: 'Text' }, 
+                { name: '単価', type: 'Price' }, 
+                { name: '在庫数', type: 'Number' },
+                { name: '作成日時', type: 'DateTime' }, 
+                { name: '編集日時', type: 'DateTime' }, 
+                { name: '作成者Email', type: 'Email' }, 
+                { name: '編集者Email', type: 'Email' }, 
+                { name: 'フラグ', type: 'Yes/No' }, 
+                { name: 'メモ', type: 'LongText' }
+            ] 
+        }
     ];
 
     const PRESETS_DATA = {
