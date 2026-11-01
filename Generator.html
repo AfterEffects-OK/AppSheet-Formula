@@ -55,54 +55,56 @@
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
 
   <!-- Header -->
-  <header class="border-b border-slate-800 bg-slate-900/85 backdrop-blur sticky top-0 z-50">
+  <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-slate-950/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/20">
-          <i data-lucide="layers" class="w-6 h-6"></i>
+        <div class="bg-gradient-to-tr from-blue-600 to-indigo-600 p-2.5 rounded-xl text-white shadow-md shadow-blue-500/20 ring-1 ring-white/10">
+          <i data-lucide="layers" class="w-5 h-5"></i>
         </div>
         <div>
-          <h1 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-          AppSheet Expression Builder
-          <span class="text-xs font-normal px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">v3.0 All Functions</span>
-        </h1>
-        <p class="text-xs text-slate-400">テーブル構造からAppSheet全関数構文を自動生成・解説</p>
-      </div>
+          <h1 class="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-2">
+            AppSheet Expression Builder
+            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">v3.1 Smart UI</span>
+          </h1>
+          <p class="text-[11px] text-slate-400 hidden sm:block">テーブル構造からAppSheet全関数構文を自動生成・解説</p>
+        </div>
       </div>
 
-      <div class="flex items-center space-x-2 sm:space-x-3">
-        <button id="btn-open-import-modal" class="px-3 py-1.5 text-xs font-medium text-slate-200 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-md transition flex items-center gap-1.5 cursor-pointer">
+      <div class="flex items-center space-x-2">
+        <button id="btn-open-import-modal" class="px-3 py-1.5 text-xs font-medium text-slate-200 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 rounded-xl shadow-md shadow-blue-600/20 transition flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
-          一括インポート / CSV
+          <span class="hidden sm:inline">一括インポート / CSV</span>
         </button>
-        <button id="btn-load-sample" class="px-3 py-1.5 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white rounded-lg border border-slate-700 transition flex items-center gap-1.5 cursor-pointer">
+        <button id="btn-load-sample" class="px-3 py-1.5 text-xs font-medium text-slate-300 bg-slate-800/80 hover:bg-slate-700 hover:text-white rounded-xl border border-slate-700/80 transition flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="database" class="w-3.5 h-3.5 text-blue-400"></i>
-          サンプル読み込み
+          <span class="hidden sm:inline">サンプル</span>
         </button>
-        <button id="btn-clear-all" class="px-3 py-1.5 text-xs font-medium text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 rounded-lg border border-rose-500/20 transition flex items-center gap-1.5 cursor-pointer">
+        <button id="btn-clear-all" class="px-2.5 py-1.5 text-xs font-medium text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 rounded-xl border border-rose-500/20 transition flex items-center gap-1 cursor-pointer" title="全クリア">
           <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-          クリア
         </button>
-        <button type="button" onclick="openHelpModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 transition flex items-center gap-1.5 cursor-pointer">
-          <i data-lucide="help-circle" class="w-4 h-4 text-blue-400"></i>
-          <span>使い方ガイド</span>
+        <div class="h-4 w-px bg-slate-800 mx-1"></div>
+        <button type="button" onclick="openHelpModal()" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700/80 transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="help-circle" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span class="hidden sm:inline">使い方</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- Main Content Layout -->
-  <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-    <!-- Left Sidebar: Schema Manager (5 cols for better spacing) -->
+    <!-- Left Sidebar: Schema Manager (5 cols) -->
     <section class="lg:col-span-5 flex flex-col gap-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col h-full">
+      <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-5 shadow-xl backdrop-blur-sm flex flex-col">
         <div class="flex items-center justify-between pb-3 border-b border-slate-800">
           <div class="flex items-center gap-2">
-            <i data-lucide="table" class="w-5 h-5 text-blue-400"></i>
-            <h2 class="font-semibold text-slate-200">1. スキーマ（テーブル構造）</h2>
+            <div class="p-1.5 bg-blue-500/10 text-blue-400 rounded-lg">
+              <i data-lucide="table" class="w-4 h-4"></i>
+            </div>
+            <h2 class="font-semibold text-xs text-slate-200 tracking-wide uppercase">1. スキーマ（テーブル構造）</h2>
           </div>
-          <span class="text-xs text-slate-400">テーブル数: <strong id="stat-table-count" class="text-blue-400">0</strong></span>
+          <span class="text-xs text-slate-400">テーブル数: <strong id="stat-table-count" class="text-blue-400 font-mono">0</strong></span>
         </div>
 
         <!-- Quick Presets -->
@@ -111,13 +113,13 @@
             ワンタッププリセット追加:
           </p>
           <div class="flex flex-wrap gap-1.5">
-            <button type="button" onclick="addPresetTable('customer')" class="px-2.5 py-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700/60 transition flex items-center gap-1 cursor-pointer">
+            <button type="button" onclick="addPresetTable('customer')" class="px-2.5 py-1 text-[11px] bg-slate-950/60 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-800 hover:border-slate-700 transition flex items-center gap-1 cursor-pointer">
               <i data-lucide="user" class="w-3 h-3 text-blue-400"></i> 顧客マスタ
             </button>
-            <button type="button" onclick="addPresetTable('sales')" class="px-2.5 py-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700/60 transition flex items-center gap-1 cursor-pointer">
+            <button type="button" onclick="addPresetTable('sales')" class="px-2.5 py-1 text-[11px] bg-slate-950/60 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-800 hover:border-slate-700 transition flex items-center gap-1 cursor-pointer">
               <i data-lucide="shopping-bag" class="w-3 h-3 text-emerald-400"></i> 売上履歴
             </button>
-            <button type="button" onclick="addPresetTable('product')" class="px-2.5 py-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md border border-slate-700/60 transition flex items-center gap-1 cursor-pointer">
+            <button type="button" onclick="addPresetTable('product')" class="px-2.5 py-1 text-[11px] bg-slate-950/60 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-800 hover:border-slate-700 transition flex items-center gap-1 cursor-pointer">
               <i data-lucide="package" class="w-3 h-3 text-amber-400"></i> 商品マスタ
             </button>
           </div>
@@ -128,24 +130,24 @@
           <form id="form-quick-add" class="space-y-2">
             <div class="flex items-center gap-2">
               <input type="text" id="quick-tbl-name" placeholder="テーブル名 (例: 注文明細)" 
-                class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-blue-500 transition">
-              <button type="submit" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-lg transition flex items-center gap-1 shrink-0 cursor-pointer">
+                class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+              <button type="submit" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs font-medium rounded-xl transition flex items-center gap-1 shrink-0 cursor-pointer shadow-md shadow-blue-600/20">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i> 追加
               </button>
             </div>
-            <textarea id="quick-col-list" rows="2" placeholder="カンマ、タブ、またはスプレッドシートの行をそのまま貼り付け (例: ID注文	ID顧客	金額)" 
-              class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-300 font-mono focus:outline-none focus:border-blue-500 transition placeholder:text-slate-600"></textarea>
+            <textarea id="quick-col-list" rows="2" placeholder="カンマ、タブ、または行データをそのまま貼り付け (例: ID注文	ID顧客	金額)" 
+              class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[11px] text-slate-300 font-mono focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition placeholder:text-slate-600 resize-none"></textarea>
           </form>
         </div>
 
         <!-- Table List Container -->
-        <div id="schema-container" class="flex-1 overflow-y-auto my-2 space-y-4 pr-1 max-h-[calc(100vh-320px)]">
+        <div id="schema-container" class="flex-1 overflow-y-auto my-2 space-y-3 pr-1 max-h-[calc(100vh-340px)]">
           <!-- Rendered dynamically -->
         </div>
 
         <div class="pt-3 border-t border-slate-800/80 text-[11px] text-slate-500 flex items-center justify-between">
           <span class="flex items-center gap-1">
-            <i data-lucide="hard-drive" class="w-3 h-3"></i> localStorage自動同期中
+            <i data-lucide="hard-drive" class="w-3 h-3 text-blue-500"></i> localStorage自動保存有効
           </span>
         </div>
       </div>
@@ -155,11 +157,13 @@
     <main class="lg:col-span-7 space-y-6 flex flex-col">
 
       <!-- Step 2: Expression Generator Workspace Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-5 shadow-xl backdrop-blur-sm space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-slate-800">
           <div class="flex items-center gap-2">
-            <i data-lucide="wand-2" class="w-5 h-5 text-blue-400"></i>
-            <h2 class="font-semibold text-slate-200">2. 生成したい処理の設定</h2>
+            <div class="p-1.5 bg-blue-500/10 text-blue-400 rounded-lg">
+              <i data-lucide="wand-2" class="w-4 h-4"></i>
+            </div>
+            <h2 class="font-semibold text-xs text-slate-200 tracking-wide uppercase">2. 生成したい処理の設定</h2>
           </div>
         </div>
 
@@ -167,16 +171,19 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1.5">関数の検索・フィルタ</label>
-              <input type="text" id="input-func-search" placeholder="関数名で検索 (例: CONCATENATE, DATE...)" 
-                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-blue-500 transition">
+              <div class="relative">
+                <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5"></i>
+                <input type="text" id="input-func-search" placeholder="関数名で検索 (例: CONCATENATE...)" 
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+              </div>
             </div>
 
             <div class="flex items-end pb-1 justify-end">
-              <label class="inline-flex items-center cursor-pointer select-none">
+              <label class="inline-flex items-center cursor-pointer select-none bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80 hover:border-slate-700 transition">
                 <input type="checkbox" id="toggle-thisrow" class="sr-only peer" checked>
-                <div class="relative w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                <div class="relative w-8 h-4 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
                 <span class="ms-2 text-xs font-medium text-slate-300 flex items-center gap-1">
-                  <code class="text-blue-400 font-mono">[_THISROW].</code> プレフィックス
+                  <code class="text-blue-400 font-mono text-[11px]">[_THISROW].</code> プレフィックス
                 </span>
               </label>
             </div>
@@ -184,7 +191,7 @@
 
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1.5">生成パターン（関数の選択）</label>
-            <select id="select-category" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-blue-500 transition">
+            <select id="select-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
               <optgroup label="参照・リレーション (Ref & Lookup)">
                 <option value="LOOKUP">LOOKUP（他テーブルから1項目取得）</option>
                 <option value="DEREF">De-Reference ( [Ref列].[項目名] 形式の直接参照 )</option>
@@ -239,44 +246,46 @@
                 <option value="RANDBETWEEN">RANDBETWEEN（指定範囲のランダム整数の生成）</option>
               </optgroup>
               <optgroup label="高度な合成関数 (Advanced Composition)">
-                  <option value="COMPOSITE_IF_SUM">条件付き集計のしきい値判定 (IF + SUM + SELECT)</option>
-                  <option value="COMPOSITE_ISBLANK_FILTER">重複登録防止バリデーション (ISBLANK + FILTER)</option>
-                  <option value="COMPOSITE_INDEX_SPLIT">リスト要素の抽出 (INDEX + SPLIT)</option>
-                  <option value="COMPOSITE_IN_SELECT">権限・存在判定 (IN + SELECT)</option>
+                <option value="COMPOSITE_IF_SUM">条件付き集計のしきい値判定 (IF + SUM + SELECT)</option>
+                <option value="COMPOSITE_ISBLANK_FILTER">重複登録防止バリデーション (ISBLANK + FILTER)</option>
+                <option value="COMPOSITE_INDEX_SPLIT">リスト要素の抽出 (INDEX + SPLIT)</option>
+                <option value="COMPOSITE_IN_SELECT">権限・存在判定 (IN + SELECT)</option>
               </optgroup>
             </select>
           </div>
         </div>
 
         <!-- Dynamic Inputs Area -->
-        <div id="dynamic-inputs" class="bg-slate-950/60 rounded-xl p-4 border border-slate-800/80 space-y-4">
+        <div id="dynamic-inputs" class="bg-slate-950/40 rounded-xl p-4 border border-slate-800/80 space-y-4">
           <!-- Dynamic form injected by JS -->
         </div>
       </div>
 
       <!-- Step 3: Expression Output & Explanation Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex-1 flex flex-col justify-between">
+      <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-sm flex-1 flex flex-col justify-between space-y-4">
         <div>
-          <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
             <div class="flex items-center gap-2">
-              <i data-lucide="code-2" class="w-5 h-5 text-emerald-400"></i>
-              <h2 class="font-semibold text-slate-200">3. 生成された AppSheet 式</h2>
+              <div class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg">
+                <i data-lucide="code-2" class="w-4 h-4"></i>
+              </div>
+              <h2 class="font-semibold text-xs text-slate-200 tracking-wide uppercase">3. 生成された AppSheet 式</h2>
             </div>
-            <button type="button" id="btn-copy" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium text-xs rounded-xl shadow-lg shadow-blue-600/20 flex items-center gap-2 transition cursor-pointer">
-              <i data-lucide="copy" class="w-4 h-4"></i>
+            <button type="button" id="btn-copy" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-medium text-xs rounded-xl shadow-lg shadow-blue-600/25 flex items-center gap-2 transition cursor-pointer">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
               クリップボードにコピー
             </button>
           </div>
 
           <!-- Output Code Display -->
           <div class="relative group">
-            <pre class="bg-slate-950 border border-slate-800 rounded-xl p-4 overflow-x-auto text-emerald-400 font-mono text-sm leading-relaxed min-h-[70px] flex items-center"><code id="code-output" class="w-full break-all">-- 生成中 --</code></pre>
+            <pre class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 overflow-x-auto text-emerald-400 font-mono text-xs sm:text-sm leading-relaxed min-h-[70px] flex items-center shadow-inner"><code id="code-output" class="w-full break-all">-- 生成中 --</code></pre>
           </div>
 
           <!-- Explanation Panel -->
-          <div class="mt-6 space-y-4">
-            <!-- 公式ドキュメントリンク（折り返しなし・flex横並び） -->
-            <div class="flex items-center justify-between bg-slate-950/40 border border-slate-800 rounded-xl px-4 py-3">
+          <div class="mt-5 space-y-3">
+            <!-- 公式ドキュメントリンク -->
+            <div class="flex items-center justify-between bg-slate-950/50 border border-slate-800/80 rounded-xl px-4 py-2.5">
                 <span class="text-xs text-slate-400 whitespace-nowrap">公式ドキュメントで詳細を確認:</span>
                 <a id="link-official-help" href="https://support.google.com/appsheet/table/10104782?hl=ja" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 hover:text-blue-300 text-xs rounded-lg border border-blue-500/20 transition flex items-center gap-1.5 shrink-0">
                     <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
@@ -285,11 +294,11 @@
             </div>
 
             <!-- 解説パネルとワンポイント（横並びグリッド） -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <!-- 動作解説 -->
-                <div class="bg-slate-950/40 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
+                <div class="bg-slate-950/40 border border-slate-800/80 rounded-xl p-3.5 flex flex-col justify-between">
                   <h3 class="text-xs font-semibold text-slate-300 flex items-center gap-1.5 mb-2">
-                    <i data-lucide="book-open" class="w-4 h-4 text-blue-400"></i> 式の動作解説
+                    <i data-lucide="book-open" class="w-3.5 h-3.5 text-blue-400"></i> 式の動作解説
                   </h3>
                   <p id="text-explanation" class="text-xs text-slate-400 leading-relaxed">
                     選択したパターンとパラメータに基づいて説明が表示されます。
@@ -297,9 +306,9 @@
                 </div>
 
                 <!-- ワンポイントアドバイス -->
-                <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 flex flex-col justify-between">
+                <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-3.5 flex flex-col justify-between">
                   <h3 class="text-xs font-semibold text-amber-400 flex items-center gap-1.5 mb-2">
-                    <i data-lucide="lightbulb" class="w-4 h-4 text-amber-400"></i> AppSheet開発のワンポイント
+                    <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-amber-400"></i> AppSheet開発のワンポイント
                   </h3>
                   <p id="text-advice" class="text-xs text-amber-200/80 leading-relaxed">
                     AppSheetでの実装における注意点やパフォーマンス上のヒントが表示されます。
@@ -313,25 +322,25 @@
   </div>
 
   <!-- Import Modal -->
-  <div id="import-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-200">
+  <div id="import-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-200">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-semibold text-slate-100 flex items-center gap-2">
-          <i data-lucide="file-spreadsheet" class="w-5 h-5 text-blue-400"></i>
+        <h3 class="font-semibold text-slate-100 flex items-center gap-2 text-sm">
+          <i data-lucide="file-spreadsheet" class="w-4 h-4 text-blue-400"></i>
           複数スキーマ一括インポート
         </h3>
-        <button type="button" id="btn-close-modal" class="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer">
-          <i data-lucide="x" class="w-5 h-5"></i>
+        <button type="button" id="btn-close-modal" class="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
       <!-- Drag & Drop / File Select -->
-      <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-blue-500/80 rounded-xl p-5 text-center bg-slate-950/50 cursor-pointer transition">
-        <i data-lucide="upload-cloud" class="w-8 h-8 text-blue-400 mx-auto mb-2 opacity-80"></i>
+      <div id="drop-zone" class="border-2 border-dashed border-slate-700/80 hover:border-blue-500 rounded-xl p-5 text-center bg-slate-950/50 cursor-pointer transition">
+        <i data-lucide="upload-cloud" class="w-7 h-7 text-blue-400 mx-auto mb-2 opacity-90"></i>
         <p class="text-xs text-slate-300 font-medium mb-1">CSVまたはTSVファイルをドラッグ＆ドロップ</p>
         <p class="text-[11px] text-slate-500 mb-3">（1レコード＝1スキーマ、複数行の一括取り込みに対応）</p>
         <input type="file" id="file-input" accept=".csv,.tsv,.txt" class="hidden">
-        <button type="button" onclick="document.getElementById('file-input').click()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition cursor-pointer">
+        <button type="button" onclick="document.getElementById('file-input').click()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition cursor-pointer">
           ファイルを選択
         </button>
       </div>
@@ -343,10 +352,10 @@
       </div>
 
       <!-- Paste Text Area -->
-      <div class="space-y-2">
+      <div class="space-y-1.5">
         <label class="text-xs text-slate-400 block">複数行のデータをそのまま貼り付け（A列が先頭項目になります）</label>
         <textarea id="modal-paste-text" rows="5" placeholder="例:&#10;ID注文	ID顧客	金額	注文日	ステータス&#10;ID顧客	顧客名	メールアドレス	会員ランク" 
-          class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 font-mono focus:outline-none focus:border-blue-500 placeholder:text-slate-600"></textarea>
+          class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 font-mono focus:outline-none focus:border-blue-500 placeholder:text-slate-600 resize-none"></textarea>
       </div>
 
       <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
@@ -355,21 +364,21 @@
         </button>
 
         <button type="button" id="btn-submit-import" class="px-4 py-2 text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-600/20 transition flex items-center gap-1.5 cursor-pointer">
-          <i data-lucide="check" class="w-4 h-4"></i> 一括インポート実行
+          <i data-lucide="check" class="w-3.5 h-3.5"></i> 一括インポート実行
         </button>
       </div>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 right-6 bg-emerald-500 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
-    <i data-lucide="check-circle-2" class="w-5 h-5"></i>
-    <span id="toast-message" class="text-sm font-medium">クリップボードにコピーしました！</span>
+  <div id="toast" class="fixed bottom-6 right-6 bg-emerald-600 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none ring-1 ring-white/10">
+    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+    <span id="toast-message" class="text-xs font-medium">クリップボードにコピーしました！</span>
   </div>
 
   <!-- JavaScript App Logic -->
   <script>
-    // Initial Sample Data Schema (All ID columns updated to "ID[Name]")
+    // Initial Sample Data Schema
     const SAMPLE_SCHEMA = [
         {
             id: 'tbl_orders', 
@@ -450,8 +459,6 @@
 
     // State
     let schema = [];
-
-    // LocalStorage Keys
     const STORAGE_KEY = 'appsheet_builder_schema_v1';
 
     // DOM Elements
@@ -484,7 +491,6 @@
       lucide.createIcons();
     });
 
-    // Load schema
     function loadSchema() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -498,14 +504,12 @@
       }
     }
 
-    // Save schema
     function saveSchema() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(schema));
       statTableCount.textContent = schema.length;
       renderDynamicForm();
     }
 
-    // Event Listeners
     function initEvents() {
       document.getElementById('form-quick-add').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -549,6 +553,7 @@
           schema = [];
           saveSchema();
           renderSchema();
+          showToast('すべてのテーブルをクリアしました');
         }
       });
 
@@ -572,7 +577,6 @@
       });
     }
 
-    // Modal Events Setup
     function initModalEvents() {
       btnOpenModal.addEventListener('click', () => {
         importModal.classList.remove('opacity-0', 'pointer-events-none');
@@ -684,23 +688,27 @@
 
       if (schema.length === 0) {
         schemaContainer.innerHTML = `
-          <div class="text-center py-8 text-slate-500 text-xs">
+          <div class="text-center py-10 text-slate-500 text-xs">
             <p>登録されているテーブルはありません。</p>
             <p class="mt-1">上のフォームまたはサンプル読み込みをご利用ください。</p>
           </div>
         `;
+        statTableCount.textContent = '0';
+        renderDynamicForm();
         return;
       }
 
+      statTableCount.textContent = schema.length;
+
       schema.forEach((tbl, tIdx) => {
         const card = document.createElement('div');
-        card.className = 'bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2';
+        card.className = 'bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5 space-y-2 hover:border-slate-700 transition';
         
         const colsHTML = tbl.columns.map((col, cIdx) => `
-          <div class="flex items-center justify-between bg-slate-900/80 px-2.5 py-1 rounded-lg text-xs">
+          <div class="flex items-center justify-between bg-slate-900/60 px-2.5 py-1.5 rounded-lg text-xs group/col">
             <div class="flex items-center gap-2">
               <span class="text-slate-200 font-medium">${escapeHtml(col.name)}</span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-blue-400 border border-slate-700">${col.type}</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-blue-400 border border-slate-700/60">${col.type}</span>
             </div>
             <button type="button" onclick="removeColumn('${tbl.id}', ${cIdx})" class="text-slate-500 hover:text-rose-400 p-0.5 transition cursor-pointer" title="カラムを削除">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
@@ -711,18 +719,18 @@
         card.innerHTML = `
           <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
             <div class="flex items-center gap-2">
-              <i data-lucide="database" class="w-4 h-4 text-blue-400"></i>
+              <i data-lucide="database" class="w-3.5 h-3.5 text-blue-400"></i>
               <span class="font-semibold text-xs text-white">${escapeHtml(tbl.name)}</span>
-              <span class="text-[10px] text-slate-500">(${tbl.columns.length}Cols)</span>
+              <span class="text-[10px] text-slate-500 font-mono">(${tbl.columns.length} Cols)</span>
             </div>
-            <div class="flex items-center gap-1">
-              <button type="button" onclick="addColumnPrompt('${tbl.id}')" class="text-[11px] text-blue-400 hover:underline px-1.5 py-0.5 bg-blue-500/10 rounded cursor-pointer">＋列追加</button>
-              <button type="button" onclick="removeTable('${tbl.id}')" class="text-slate-500 hover:text-rose-400 p-1 cursor-pointer" title="テーブル削除">
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="addColumnPrompt('${tbl.id}')" class="text-[11px] text-blue-400 hover:text-blue-300 px-2 py-0.5 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition cursor-pointer">＋列追加</button>
+              <button type="button" onclick="removeTable('${tbl.id}')" class="text-slate-500 hover:text-rose-400 p-1 rounded-lg hover:bg-rose-500/10 transition cursor-pointer" title="テーブル削除">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
             </div>
           </div>
-          <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+          <div class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
             ${colsHTML}
           </div>
         `;
@@ -903,7 +911,6 @@
     };
 
     let lastFocusedInputId = '';
-
     document.addEventListener('focusin', (e) => {
         if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') && e.target.id) {
             lastFocusedInputId = e.target.id;
@@ -935,20 +942,20 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">取得したい参照先テーブル</label>
-              <select id="lookup-target-table" onchange="onLookupTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">取得したい参照先テーブル</label>
+              <select id="lookup-target-table" onchange="onLookupTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500">${tableOptions}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">取得したい結果カラム</label>
-              <select id="lookup-result-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+              <label class="block text-slate-400 mb-1.5 font-medium">取得したい結果カラム</label>
+              <select id="lookup-result-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500"></select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">参照先テーブルの照合カラム</label>
-              <select id="lookup-match-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+              <label class="block text-slate-400 mb-1.5 font-medium">参照先テーブルの照合カラム</label>
+              <select id="lookup-match-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500"></select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">現在の検索キー項目</label>
-              <select id="lookup-key-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">現在の検索キー項目</label>
+              <select id="lookup-key-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500">${getAllColumnsFlatOptions()}</select>
             </div>
           </div>
         `;
@@ -958,12 +965,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">Ref型の参照カラム（自テーブル）</label>
-              <select id="deref-ref-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">Ref型の参照カラム（自テーブル）</label>
+              <select id="deref-ref-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">参照先テーブルで取得したい項目名</label>
-              <input type="text" id="deref-target-col" value="顧客名" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">参照先テーブルで取得したい項目名</label>
+              <input type="text" id="deref-target-col" value="顧客名" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none focus:border-blue-500">
             </div>
           </div>
         `;
@@ -973,12 +980,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">関連子テーブル</label>
-              <select id="refrows-target-table" onchange="onRefRowsTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">関連子テーブル</label>
+              <select id="refrows-target-table" onchange="onRefRowsTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500">${tableOptions}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">子テーブル側のRef型親キーカラム</label>
-              <select id="refrows-ref-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+              <label class="block text-slate-400 mb-1.5 font-medium">子テーブル側のRef型親キーカラム</label>
+              <select id="refrows-ref-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500"></select>
             </div>
           </div>
         `;
@@ -988,26 +995,26 @@
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                      <label class="block text-slate-400 mb-1">対象テーブル</label>
-                      <select id="select-target-table" onchange="onSelectTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">対象テーブル</label>
+                      <select id="select-target-table" onchange="onSelectTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500">${tableOptions}</select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">抽出したい対象カラム</label>
-                      <select id="select-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">抽出したい対象カラム</label>
+                      <select id="select-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500"></select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">条件カラム</label>
-                      <select id="select-cond-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">条件カラム</label>
+                      <select id="select-cond-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500"></select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">比較値 / 現在行のカラム</label>
-                      <select id="select-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">比較値 / 現在行のカラム</label>
+                      <select id="select-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500">${getAllColumnsFlatOptions()}</select>
                   </div>
               </div>
               <div class="mt-3 pt-3 border-t border-slate-800 flex items-center gap-2">
-                  <span class="text-[11px] text-slate-400">列を挿入:</span>
-                  <select id="common-col-selector" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 text-xs">${getAllColumnsFlatOptions()}</select>
-                  <button type="button" onclick="insertColumnToActiveInput(document.getElementById('common-col-selector').value)" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-lg transition shrink-0 cursor-pointer">挿入</button>
+                  <span class="text-[11px] text-slate-400 font-medium">列をクイック挿入:</span>
+                  <select id="common-col-selector" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1.5 text-slate-200 text-xs focus:outline-none">${getAllColumnsFlatOptions()}</select>
+                  <button type="button" onclick="insertColumnToActiveInput(document.getElementById('common-col-selector').value)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs rounded-xl transition shrink-0 cursor-pointer">挿入</button>
               </div>
           `;
           onSelectTableChange();
@@ -1017,20 +1024,20 @@
               <div class="space-y-3 text-xs">
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                          <label class="block text-slate-400 mb-1">対象テーブル</label>
-                          <select id="filter-target-table" onchange="onFilterTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                          <label class="block text-slate-400 mb-1.5 font-medium">対象テーブル</label>
+                          <select id="filter-target-table" onchange="onFilterTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500">${tableOptions}</select>
                       </div>
                       <div>
-                          <label class="block text-slate-400 mb-1">テーブルの列を挿入</label>
+                          <label class="block text-slate-400 mb-1.5 font-medium">テーブルの列を挿入</label>
                           <div class="flex gap-1.5">
-                              <select id="filter-col-selector" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
-                              <button type="button" onclick="insertColumnToFilter(document.getElementById('filter-col-selector').value)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition shrink-0 cursor-pointer">挿入</button>
+                              <select id="filter-col-selector" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none"></select>
+                              <button type="button" onclick="insertColumnToFilter(document.getElementById('filter-col-selector').value)" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition shrink-0 cursor-pointer">挿入</button>
                           </div>
                       </div>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">絞り込み条件式</label>
-                      <input type="text" id="filter-cond-expr" value='[ステータス] = "進行中"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                      <label class="block text-slate-400 mb-1.5 font-medium">絞り込み条件式</label>
+                      <input type="text" id="filter-cond-expr" value='[ステータス] = "進行中"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none focus:border-blue-500">
                   </div>
               </div>
           `;
@@ -1038,9 +1045,9 @@
       }
       else if (category === 'LIST') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">リストに含める要素 (カンマ区切り)</label>
-            <input type="text" id="list-elements" value='"Apple", "Banana", "Orange"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">リストに含める要素 (カンマ区切り)</label>
+            <input type="text" id="list-elements" value='"Apple", "Banana", "Orange"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none focus:border-blue-500">
           </div>
         `;
         updateGeneratedExpression();
@@ -1049,12 +1056,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">対象カラム / 文字列</label>
-              <select id="split-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象カラム / 文字列</label>
+              <select id="split-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-blue-500">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">区切り文字 (Delimiter)</label>
-              <input type="text" id="split-delimiter" value="," oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">区切り文字 (Delimiter)</label>
+              <input type="text" id="split-delimiter" value="," oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none focus:border-blue-500">
             </div>
           </div>
         `;
@@ -1064,12 +1071,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">リスト 1</label>
-              <input type="text" id="intersect-list1" value='LIST("A", "B", "C")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">リスト 1</label>
+              <input type="text" id="intersect-list1" value='LIST("A", "B", "C")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none focus:border-blue-500">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">リスト 2</label>
-              <input type="text" id="intersect-list2" value='LIST("B", "C", "D")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">リスト 2</label>
+              <input type="text" id="intersect-list2" value='LIST("B", "C", "D")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none focus:border-blue-500">
             </div>
           </div>
         `;
@@ -1077,9 +1084,9 @@
       }
       else if (category === 'UNIQUE') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">重複除去したい対象リスト (SELECT/LIST式)</label>
-            <input type="text" id="unique-target-list" value='SELECT(注文履歴[ID顧客], TRUE)' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">重複除去したい対象リスト (SELECT/LIST式)</label>
+            <input type="text" id="unique-target-list" value='SELECT(注文履歴[ID顧客], TRUE)' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none focus:border-blue-500">
           </div>
         `;
         updateGeneratedExpression();
@@ -1088,8 +1095,8 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">集計関数</label>
-              <select id="agg-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+              <label class="block text-slate-400 mb-1.5 font-medium">集計関数</label>
+              <select id="agg-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
                 <option value="SUM">SUM（合計）</option>
                 <option value="COUNT">COUNT（件数）</option>
                 <option value="AVERAGE">AVERAGE（平均）</option>
@@ -1098,20 +1105,20 @@
               </select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">対象テーブル</label>
-              <select id="agg-target-table" onchange="onAggTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象テーブル</label>
+              <select id="agg-target-table" onchange="onAggTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${tableOptions}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">集計数値カラム</label>
-              <select id="agg-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+              <label class="block text-slate-400 mb-1.5 font-medium">集計数値カラム</label>
+              <select id="agg-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none"></select>
             </div>
             <div class="sm:col-span-1">
-              <label class="block text-slate-400 mb-1">絞り込み条件カラム</label>
-              <select id="agg-cond-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+              <label class="block text-slate-400 mb-1.5 font-medium">絞り込み条件カラム</label>
+              <select id="agg-cond-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none"></select>
             </div>
             <div class="sm:col-span-2">
-              <label class="block text-slate-400 mb-1">一致させる自行のカラム</label>
-              <select id="agg-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">一致させる自行のカラム</label>
+              <select id="agg-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
           </div>
         `;
@@ -1119,9 +1126,9 @@
       }
       else if (category === 'STDEVP') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">標準偏差を求める数値リスト (SELECT式など)</label>
-            <input type="text" id="stdevp-target-list" value='SELECT(テスト結果[点数], TRUE)' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">標準偏差を求める数値リスト (SELECT式など)</label>
+            <input type="text" id="stdevp-target-list" value='SELECT(テスト結果[点数], TRUE)' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
           </div>
         `;
         updateGeneratedExpression();
@@ -1131,31 +1138,31 @@
           <div class="space-y-3 text-xs">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-slate-400 mb-1">評価対象のカラム</label>
-                <select id="ifs-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+                <label class="block text-slate-400 mb-1.5 font-medium">評価対象のカラム</label>
+                <select id="ifs-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
               </div>
             </div>
-            <div class="border-t border-slate-800 pt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="border-t border-slate-800/80 pt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-slate-400 mb-1">条件 1</label>
-                <input type="text" id="ifs-cond-1" value='= "完了"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">条件 1</label>
+                <input type="text" id="ifs-cond-1" value='= "完了"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">結果 1</label>
-                <input type="text" id="ifs-res-1" value='"完了済"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">結果 1</label>
+                <input type="text" id="ifs-res-1" value='"完了済"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">条件 2</label>
-                <input type="text" id="ifs-cond-2" value='= "処理中"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">条件 2</label>
+                <input type="text" id="ifs-cond-2" value='= "処理中"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">結果 2</label>
-                <input type="text" id="ifs-res-2" value='"対応中"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">結果 2</label>
+                <input type="text" id="ifs-res-2" value='"対応中"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">デフォルト結果 (TRUE)</label>
-              <input type="text" id="ifs-res-default" value='"未設定"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">デフォルト結果 (TRUE)</label>
+              <input type="text" id="ifs-res-default" value='"未設定"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1165,30 +1172,30 @@
         dynamicInputs.innerHTML = `
           <div class="space-y-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">判定対象の式/カラム</label>
-              <select id="switch-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">判定対象の式/カラム</label>
+              <select id="switch-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-slate-400 mb-1">値 1</label>
-                <input type="text" id="switch-val-1" value='"A"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">値 1</label>
+                <input type="text" id="switch-val-1" value='"A"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">結果 1</label>
-                <input type="text" id="switch-res-1" value='"優"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">結果 1</label>
+                <input type="text" id="switch-res-1" value='"優"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">値 2</label>
-                <input type="text" id="switch-val-2" value='"B"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">値 2</label>
+                <input type="text" id="switch-val-2" value='"B"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">結果 2</label>
-                <input type="text" id="switch-res-2" value='"良"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">結果 2</label>
+                <input type="text" id="switch-res-2" value='"良"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">デフォルト値 (不一致時)</label>
-              <input type="text" id="switch-default" value='"可"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">デフォルト値 (不一致時)</label>
+              <input type="text" id="switch-default" value='"可"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1198,17 +1205,17 @@
         dynamicInputs.innerHTML = `
           <div class="space-y-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">条件式</label>
-              <input type="text" id="if-cond" value="[金額] > 10000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">条件式</label>
+              <input type="text" id="if-cond" value="[金額] > 10000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-slate-400 mb-1">真(True)の場合の値</label>
-                <input type="text" id="if-true-val" value='"高額"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">真(True)の場合の値</label>
+                <input type="text" id="if-true-val" value='"高額"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">偽(False)の場合の値</label>
-                <input type="text" id="if-false-val" value='"通常"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">偽(False)の場合の値</label>
+                <input type="text" id="if-false-val" value='"通常"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
             </div>
           </div>
@@ -1219,20 +1226,20 @@
         dynamicInputs.innerHTML = `
           <div class="space-y-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">結合タイプ</label>
-              <select id="andor-type" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+              <label class="block text-slate-400 mb-1.5 font-medium">結合タイプ</label>
+              <select id="andor-type" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
                 <option value="AND">AND（すべての条件を満たす）</option>
                 <option value="OR">OR（いずれかの条件を満たす）</option>
               </select>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-slate-400 mb-1">条件 1</label>
-                <input type="text" id="andor-cond1" value='[ステータス] = "完了"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">条件 1</label>
+                <input type="text" id="andor-cond1" value='[ステータス] = "完了"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
               <div>
-                <label class="block text-slate-400 mb-1">条件 2</label>
-                <input type="text" id="andor-cond2" value='[金額] >= 5000' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                <label class="block text-slate-400 mb-1.5 font-medium">条件 2</label>
+                <input type="text" id="andor-cond2" value='[金額] >= 5000' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
               </div>
             </div>
           </div>
@@ -1241,9 +1248,9 @@
       }
       else if (category === 'NOT') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">反転させたい条件式</label>
-            <input type="text" id="not-cond" value='[ステータス] = "非表示"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">反転させたい条件式</label>
+            <input type="text" id="not-cond" value='[ステータス] = "非表示"' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
           </div>
         `;
         updateGeneratedExpression();
@@ -1252,20 +1259,20 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">対象テーブル</label>
-              <select id="exist-target-table" onchange="onExistTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象テーブル</label>
+              <select id="exist-target-table" onchange="onExistTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${tableOptions}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">検証カラム</label>
-              <select id="exist-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+              <label class="block text-slate-400 mb-1.5 font-medium">検証カラム</label>
+              <select id="exist-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none"></select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">比較する自カラム</label>
-              <select id="exist-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">比較する自カラム</label>
+              <select id="exist-thisrow-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">判定タイプ</label>
-              <select id="exist-mode" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+              <label class="block text-slate-400 mb-1.5 font-medium">判定タイプ</label>
+              <select id="exist-mode" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
                 <option value="NOT_EXISTS">存在しないことを確認 (Valid_If用)</option>
                 <option value="EXISTS">存在することを確認 (Yes/No用)</option>
               </select>
@@ -1278,12 +1285,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">対象カラム</label>
-              <select id="isblank-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象カラム</label>
+              <select id="isblank-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">判定モード</label>
-              <select id="isblank-mode" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+              <label class="block text-slate-400 mb-1.5 font-medium">判定モード</label>
+              <select id="isblank-mode" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
                 <option value="ISBLANK">ISBLANK（空の場合TRUE）</option>
                 <option value="ISNOTBLANK">ISNOTBLANK（入力済の場合TRUE）</option>
               </select>
@@ -1296,12 +1303,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">検索する値/カラム</label>
-              <select id="in-val-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">検索する値/カラム</label>
+              <select id="in-val-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">検索対象のリスト</label>
-              <input type="text" id="in-target-list" value='LIST("管理者", "マネージャー")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">検索対象のリスト</label>
+              <input type="text" id="in-target-list" value='LIST("管理者", "マネージャー")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1311,12 +1318,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">対象文字列/カラム</label>
-              <select id="contains-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象文字列/カラム</label>
+              <select id="contains-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">検索キーワード</label>
-              <input type="text" id="contains-keyword" value="AppSheet" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">検索キーワード</label>
+              <input type="text" id="contains-keyword" value="AppSheet" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1324,9 +1331,9 @@
       }
       else if (category === 'CONCATENATE') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">結合する要素 (カンマ区切り)</label>
-            <input type="text" id="concat-args" value='[姓], " ", [名]' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">結合する要素 (カンマ区切り)</label>
+            <input type="text" id="concat-args" value='[姓], " ", [名]' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
           </div>
         `;
         updateGeneratedExpression();
@@ -1335,12 +1342,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">対象数値/日付カラム</label>
-              <select id="text-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象数値/日付カラム</label>
+              <select id="text-target-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">フォーマット文字列</label>
-              <input type="text" id="text-format" value="yyyy/MM/dd" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">フォーマット文字列</label>
+              <input type="text" id="text-format" value="yyyy/MM/dd" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1350,20 +1357,20 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">関数</label>
-              <select id="lrm-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+              <label class="block text-slate-400 mb-1.5 font-medium">関数</label>
+              <select id="lrm-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
                 <option value="LEFT">LEFT</option>
                 <option value="RIGHT">RIGHT</option>
                 <option value="MID">MID</option>
               </select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">対象カラム</label>
-              <select id="lrm-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象カラム</label>
+              <select id="lrm-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">パラメータ</label>
-              <input type="text" id="lrm-params" value="3" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">パラメータ</label>
+              <input type="text" id="lrm-params" value="3" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1373,16 +1380,16 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">対象カラム</label>
-              <select id="sub-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象カラム</label>
+              <select id="sub-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">検索文字列</label>
-              <input type="text" id="sub-old" value="-" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">検索文字列</label>
+              <input type="text" id="sub-old" value="-" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">置換後</label>
-              <input type="text" id="sub-new" value="" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">置換後</label>
+              <input type="text" id="sub-new" value="" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1392,12 +1399,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">対象リスト</label>
-              <input type="text" id="index-list" value='SPLIT([タグ], ",")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">対象リスト</label>
+              <input type="text" id="index-list" value='SPLIT([タグ], ",")' oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">取得位置 (1始まり)</label>
-              <input type="number" id="index-pos" value="1" min="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">取得位置 (1始まり)</label>
+              <input type="number" id="index-pos" value="1" min="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1407,15 +1414,15 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">関数</label>
-              <select id="lu-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+              <label class="block text-slate-400 mb-1.5 font-medium">関数</label>
+              <select id="lu-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
                 <option value="LOWER">LOWER</option>
                 <option value="UPPER">UPPER</option>
               </select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">対象カラム</label>
-              <select id="lu-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+              <label class="block text-slate-400 mb-1.5 font-medium">対象カラム</label>
+              <select id="lu-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
             </div>
           </div>
         `;
@@ -1423,9 +1430,9 @@
       }
       else if (category === 'TODAY_NOW') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">取得する関数</label>
-            <select id="todaynow-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">取得する関数</label>
+            <select id="todaynow-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
               <option value="TODAY">TODAY()</option>
               <option value="NOW">NOW()</option>
               <option value="TIMENOW">TIMENOW()</option>
@@ -1438,16 +1445,16 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">年</label>
-              <input type="text" id="date-y" value="2026" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">年</label>
+              <input type="text" id="date-y" value="2026" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">月</label>
-              <input type="text" id="date-m" value="11" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">月</label>
+              <input type="text" id="date-m" value="11" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">日</label>
-              <input type="text" id="date-d" value="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">日</label>
+              <input type="text" id="date-d" value="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1457,12 +1464,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">基準日</label>
-              <input type="text" id="workday-start" value="TODAY()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">基準日</label>
+              <input type="text" id="workday-start" value="TODAY()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">加算営業日数</label>
-              <input type="number" id="workday-days" value="5" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">加算営業日数</label>
+              <input type="number" id="workday-days" value="5" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1472,12 +1479,12 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">基準日</label>
-              <input type="text" id="eomonth-start" value="TODAY()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">基準日</label>
+              <input type="text" id="eomonth-start" value="TODAY()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">加減月数</label>
-              <input type="number" id="eomonth-months" value="0" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">加減月数</label>
+              <input type="number" id="eomonth-months" value="0" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1485,9 +1492,9 @@
       }
       else if (category === 'USER_INFO') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">取得するユーザー情報</label>
-            <select id="user-info-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">取得するユーザー情報</label>
+            <select id="user-info-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
               <option value="USEREMAIL">USEREMAIL()</option>
               <option value="USERNAME">USERNAME()</option>
               <option value="USERROLE">USERROLE()</option>
@@ -1498,9 +1505,9 @@
       }
       else if (category === 'CONTEXT') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">取得するコンテキスト情報</label>
-            <select id="context-option" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">取得するコンテキスト情報</label>
+            <select id="context-option" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
               <option value='"View"'>CONTEXT("View")</option>
               <option value='"ViewType"'>CONTEXT("ViewType")</option>
               <option value='"AppName"'>CONTEXT("AppName")</option>
@@ -1514,16 +1521,16 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">端数処理関数</label>
-              <select id="round-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+              <label class="block text-slate-400 mb-1.5 font-medium">端数処理関数</label>
+              <select id="round-func" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">
                 <option value="ROUND">ROUND</option>
                 <option value="CEILING">CEILING</option>
                 <option value="FLOOR">FLOOR</option>
               </select>
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">対象数値/式</label>
-              <input type="text" id="round-num" value="[単価] * 1.1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">対象数値/式</label>
+              <input type="text" id="round-num" value="[単価] * 1.1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
@@ -1531,9 +1538,9 @@
       }
       else if (category === 'ABS') {
         dynamicInputs.innerHTML = `
-          <div class="space-y-3 text-xs">
-            <label class="block text-slate-400">対象数値/カラム</label>
-            <input type="text" id="abs-num" value="[差額]" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+          <div class="space-y-2 text-xs">
+            <label class="block text-slate-400 font-medium">対象数値/カラム</label>
+            <input type="text" id="abs-num" value="[差額]" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
           </div>
         `;
         updateGeneratedExpression();
@@ -1542,35 +1549,35 @@
         dynamicInputs.innerHTML = `
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label class="block text-slate-400 mb-1">最小値</label>
-              <input type="number" id="rand-min" value="1000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">最小値</label>
+              <input type="number" id="rand-min" value="1000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
             <div>
-              <label class="block text-slate-400 mb-1">最大値</label>
-              <input type="number" id="rand-max" value="9999" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+              <label class="block text-slate-400 mb-1.5 font-medium">最大値</label>
+              <input type="number" id="rand-max" value="9999" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
             </div>
           </div>
         `;
         updateGeneratedExpression();
-      }
+      } 
       else if (category === 'COMPOSITE_IF_SUM') {
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                      <label class="block text-slate-400 mb-1">集計対象テーブル (子/関連)</label>
-                      <select id="comp-sum-table" onchange="onCompSumTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">集計対象テーブル (子/関連)</label>
+                      <select id="comp-sum-table" onchange="onCompSumTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${tableOptions}</select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">合計する金額/数値カラム</label>
-                      <select id="comp-sum-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">合計する金額/数値カラム</label>
+                      <select id="comp-sum-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none"></select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">条件一致カラム (外部キー)</label>
-                      <select id="comp-sum-cond" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">条件一致カラム (外部キー)</label>
+                      <select id="comp-sum-cond" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none"></select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">判定のしきい値</label>
-                      <input type="number" id="comp-sum-threshold" value="100000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                      <label class="block text-slate-400 mb-1.5 font-medium">判定のしきい値</label>
+                      <input type="number" id="comp-sum-threshold" value="100000" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
                   </div>
               </div>
           `;
@@ -1580,12 +1587,12 @@
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                      <label class="block text-slate-400 mb-1">チェック対象テーブル</label>
-                      <select id="comp-dup-table" onchange="onCompDupTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">チェック対象テーブル</label>
+                      <select id="comp-dup-table" onchange="onCompDupTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${tableOptions}</select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">重複チェックするカラム</label>
-                      <select id="comp-dup-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">重複チェックするカラム</label>
+                      <select id="comp-dup-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none"></select>
                   </div>
               </div>
           `;
@@ -1595,12 +1602,12 @@
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                      <label class="block text-slate-400 mb-1">対象の文字列カラム</label>
-                      <select id="comp-split-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${getAllColumnsFlatOptions()}</select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">対象の文字列カラム</label>
+                      <select id="comp-split-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${getAllColumnsFlatOptions()}</select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">取得するインデックス位置</label>
-                      <input type="number" id="comp-split-pos" value="1" min="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                      <label class="block text-slate-400 mb-1.5 font-medium">取得するインデックス位置</label>
+                      <input type="number" id="comp-split-pos" value="1" min="1" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
                   </div>
               </div>
           `;
@@ -1610,16 +1617,16 @@
           dynamicInputs.innerHTML = `
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                      <label class="block text-slate-400 mb-1">判定する値</label>
-                      <input type="text" id="comp-in-val" value="USEREMAIL()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-mono">
+                      <label class="block text-slate-400 mb-1.5 font-medium">判定する値</label>
+                      <input type="text" id="comp-in-val" value="USEREMAIL()" oninput="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 font-mono focus:outline-none">
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">対象リストテーブル</label>
-                      <select id="comp-in-table" onchange="onCompInTableChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">${tableOptions}</select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">対象リストテーブル</label>
+                      <select id="comp-in-table" onchange="onCompInTableChange()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none">${tableOptions}</select>
                   </div>
                   <div>
-                      <label class="block text-slate-400 mb-1">抽出するカラム</label>
-                      <select id="comp-in-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200"></select>
+                      <label class="block text-slate-400 mb-1.5 font-medium">抽出するカラム</label>
+                      <select id="comp-in-col" onchange="updateGeneratedExpression()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none"></select>
                   </div>
               </div>
           `;
@@ -1638,7 +1645,6 @@
       updateGeneratedExpression();
     };
 
-    // Core Expression Generator Engine
     function updateGeneratedExpression() {
       if (schema.length === 0) {
         codeOutput.textContent = '-- テーブルが登録されていません --';
@@ -1991,10 +1997,8 @@
       textExplanation.textContent = explanation;
       textAdvice.textContent = advice;
       
-      // 公式ヘルプURLの動的マッピング設定
       const FUNCTION_HELP_URLS = {
-          // 1. 個別ヘルプが存在する主要関数
-          'LOOKUP': 'https://support.google.com/appsheet/answer/10107410?hl=ja',
+          'LOOKUP': 'https://support.google.com/appsheet/answer/10107361?hl=ja',
           'SELECT': 'https://support.google.com/appsheet/answer/10108207?hl=ja',
           'FILTER': 'https://support.google.com/appsheet/answer/10108196?hl=ja',
           'REF_ROWS': 'https://support.google.com/appsheet/answer/10107364?hl=ja',
@@ -2003,40 +2007,6 @@
           'SWITCH': 'https://support.google.com/appsheet/answer/10107912?hl=ja',
           'TODAY_NOW': 'https://support.google.com/appsheet/answer/10107316?hl=ja',
           'USER_INFO': 'https://support.google.com/appsheet/answer/10107319?hl=ja',
-      
-          // 2. 個別URLがない、または一覧ページへ共通化する関数（空欄またはデフォルト一覧へ誘導）
-          'DEREF': 'https://support.google.com/appsheet/table/10104782?hl=ja',
-          'LIST': 'https://support.google.com/appsheet/table/10104782?hl=ja',
-          'SPLIT': '',
-          'INTERSECT': '',
-          'UNIQUE': '',
-          'AGGREGATE': 'https://support.google.com/appsheet/table/10104782?hl=ja',
-          'STDEVP': '',
-          'AND_OR': '',
-          'NOT': '',
-          'EXISTS': '',
-          'ISBLANK': '',
-          'IN': '',
-          'CONTAINS': '',
-          'CONCATENATE': '',
-          'TEXT': '',
-          'LEFT_RIGHT_MID': '',
-          'SUBSTITUTE': '',
-          'INDEX': '',
-          'LOWER_UPPER': '',
-          'DATE_CONSTRUCT': '',
-          'WORKDAY': '',
-          'EOMONTH': '',
-          'CONTEXT': '',
-          'ROUND': '',
-          'ABS': '',
-          'RANDBETWEEN': '',
-          'COMPOSITE_IF_SUM': '',
-          'COMPOSITE_ISBLANK_FILTER': '',
-          'COMPOSITE_INDEX_SPLIT': '',
-          'COMPOSITE_IN_SELECT': '',
-      
-          // 3. デフォルト（上記以外ですべての関数を網羅している公式一覧ページ）
           'DEFAULT': 'https://support.google.com/appsheet/table/10104782?hl=ja'
       };
 
@@ -2053,7 +2023,7 @@
               helpLinkEl.parentElement.style.display = 'none'; 
           }
       }
-    } // ← updateGeneratedExpression の閉じ括弧を正しく配置
+    }
 
     function getFuncJPName(func) {
       switch(func) {
@@ -2151,80 +2121,73 @@
       <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl flex flex-col m-4 text-slate-200">
           
           <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 shrink-0">
-              <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
-                  <i data-lucide="book-open" class="text-blue-400 w-5 h-5"></i>
+              <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+                  <i data-lucide="book-open" class="text-blue-400 w-4 h-4"></i>
                   AppSheet Expression Builder の使い方
               </h3>
               <button type="button" onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-200 p-1 rounded-lg hover:bg-slate-800 transition cursor-pointer">
-                  <i data-lucide="x" class="w-5 h-5"></i>
+                  <i data-lucide="x" class="w-4 h-4"></i>
               </button>
           </div>
   
           <div class="flex px-6 pt-3 border-b border-slate-800 gap-2 shrink-0 bg-slate-950/40">
               <button type="button" onclick="switchHelpTab('steps')" id="tab-btn-steps" class="px-4 py-2 text-xs font-semibold rounded-t-xl border-t border-x border-blue-500/50 bg-blue-600/20 text-blue-400 transition cursor-pointer flex items-center gap-1.5">
-                  <i data-lucide="list-ordered" class="w-4 h-4"></i> 基本の使い方
+                  <i data-lucide="list-ordered" class="w-3.5 h-3.5"></i> 基本の使い方
               </button>
               <button type="button" onclick="switchHelpTab('ui')" id="tab-btn-ui" class="px-4 py-2 text-xs font-medium rounded-t-xl border-t border-x border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer flex items-center gap-1.5">
-                  <i data-lucide="layout" class="w-4 h-4"></i> UI/UX・便利機能
+                  <i data-lucide="layout" class="w-3.5 h-3.5"></i> UI/UX・便利機能
               </button>
           </div>
           
-          <div class="p-6 overflow-y-auto space-y-4 text-sm text-slate-300 flex-1">
+          <div class="p-6 overflow-y-auto space-y-4 text-xs text-slate-300 flex-1">
               
               <!-- タブ1: 基本の使い方 -->
-              <div id="help-content-steps" class="space-y-4">
-                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
-                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">1</div>
+              <div id="help-content-steps" class="space-y-3">
+                  <div class="flex gap-3 items-start bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/80">
+                      <div class="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">1</div>
                       <div>
                           <h4 class="font-semibold text-slate-200 mb-1">スキーマ（テーブル構造）の準備</h4>
-                          <p class="text-xs text-slate-400 leading-relaxed">「顧客マスタ」「売上履歴」「商品マスタ」などのワンタッププリセットを追加するか、CSV・スプレッドシートの行データを貼り付けてアプリのテーブル構造を定義します。</p>
+                          <p class="text-slate-400 leading-relaxed">「顧客マスタ」「売上履歴」「商品マスタ」などのワンタッププリセットを追加するか、CSV・スプレッドシートの行データを貼り付けてアプリのテーブル構造を定義します。</p>
                       </div>
                   </div>
   
-                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
-                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">2</div>
+                  <div class="flex gap-3 items-start bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/80">
+                      <div class="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">2</div>
                       <div>
                           <h4 class="font-semibold text-slate-200 mb-1">生成したい処理（関数）の選択</h4>
-                          <p class="text-xs text-slate-400 leading-relaxed">検索機能やカテゴリから目的の関数（SELECT、LOOKUP、IFS、高度な合成関数など）を選択し、対象となるテーブルやカラムを指定します。</p>
+                          <p class="text-slate-400 leading-relaxed">検索機能やカテゴリから目的の関数（SELECT、LOOKUP、IFS、高度な合成関数など）を選択し、対象となるテーブルやカラムを指定します。</p>
                       </div>
                   </div>
   
-                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
-                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">3</div>
+                  <div class="flex gap-3 items-start bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/80">
+                      <div class="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">3</div>
                       <div>
                           <h4 class="font-semibold text-slate-200 mb-1">式をコピーして AppSheet へ適用</h4>
-                          <p class="text-xs text-slate-400 leading-relaxed">リアルタイムに自動生成された AppSheet 式を確認し、「クリップボードにコピー」ボタンを押して AppSheet エディタに貼り付けて活用します。</p>
+                          <p class="text-slate-400 leading-relaxed">リアルタイムに自動生成された AppSheet 式を確認し、「クリップボードにコピー」ボタンを押して AppSheet エディタに貼り付けて活用します。</p>
                       </div>
                   </div>
               </div>
   
               <!-- タブ2: UI/UX・便利機能 -->
-              <div id="help-content-ui" class="space-y-4 hidden">
-                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
-                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">
-                          <i data-lucide="layout-template" class="w-4 h-4"></i>
+              <div id="help-content-ui" class="space-y-3 hidden">
+                  <div class="flex gap-3 items-start bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/80">
+                      <div class="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">
+                          <i data-lucide="layout-template" class="w-3.5 h-3.5"></i>
                       </div>
                       <div>
-                          <h4 class="font-semibold text-slate-200 mb-1">3ペイン構成のレイアウト</h4>
-                          <p class="text-xs text-slate-400 leading-relaxed">画面は「1. スキーマ」「2. 生成設定」「3. 結果出力」の3ペイン構成です。左側でテーブルを定義すると、右側の関数設定や列挿入プルダウンへリアルタイムに連動します。</p>
+                          <h4 class="font-semibold text-slate-200 mb-1">2ペイン構成のスマートレイアウト</h4>
+                          <p class="text-slate-400 leading-relaxed">画面は「左：スキーマ」「右：生成・出力」の2カラム構成です。左側でテーブルを定義すると、右側の関数設定や列挿入プルダウンへリアルタイムに連動します。</p>
                       </div>
                   </div>
   
-                  <div class="flex gap-3 items-start bg-slate-800/50 p-3.5 rounded-xl border border-slate-800">
-                      <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">
-                          <i data-lucide="search" class="w-4 h-4"></i>
+                  <div class="flex gap-3 items-start bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/80">
+                      <div class="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 font-bold flex items-center justify-center shrink-0">
+                          <i data-lucide="search" class="w-3.5 h-3.5"></i>
                       </div>
                       <div>
                           <h4 class="font-semibold text-slate-200 mb-1">関数検索・フィルタ機能</h4>
-                          <p class="text-xs text-slate-400 leading-relaxed">「関数の検索・フィルタ」入力欄にキーワード（例: CONCATENATE, DATEなど）を入力すると、対応する生成パターンを瞬時に絞り込むことができます。</p>
+                          <p class="text-slate-400 leading-relaxed">「関数の検索・フィルタ」入力欄にキーワード（例: CONCATENATE, DATEなど）を入力すると、対応する生成パターンを瞬時に絞り込むことができます。</p>
                       </div>
-                  </div>
-  
-                  <div class="bg-blue-950/30 border border-blue-900/40 rounded-xl p-3.5 text-xs text-blue-200/90 space-y-1">
-                      <p class="font-semibold flex items-center gap-1.5 text-blue-300">
-                          <i data-lucide="sparkles" class="w-4 h-4"></i> カラムのワンクリック挿入
-                      </p>
-                      <p>どの入力欄を選択している時でも、専用のプルダウンからテーブルのカラム名（[列名]）をワンクリックでカーソル位置へスムーズに挿入できます。</p>
                   </div>
               </div>
   
