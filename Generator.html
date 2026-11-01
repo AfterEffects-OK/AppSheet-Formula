@@ -2071,9 +2071,16 @@
       const helpLinkEl = document.getElementById('link-official-help');
       if (helpLinkEl) {
           const category = document.getElementById('select-category')?.value;
-          helpLinkEl.href = FUNCTION_HELP_URLS[category] || FUNCTION_HELP_URLS['DEFAULT'];
+          const targetUrl = FUNCTION_HELP_URLS[category] !== undefined ? FUNCTION_HELP_URLS[category] : FUNCTION_HELP_URLS['DEFAULT'];
+          
+          if (targetUrl) {
+              helpLinkEl.href = targetUrl;
+              helpLinkEl.parentElement.style.display = ''; // ボタンを表示
+          } else {
+              helpLinkEl.href = '#';
+              helpLinkEl.parentElement.style.display = 'none'; // 固有リンクがない場合は行ごと非表示
+          }
       }
-    }
 
     function getFuncJPName(func) {
       switch(func) {
